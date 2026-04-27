@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>India State Click Map</title>
+
+<style>
+    body {
+        text-align: center;
+        font-family: Arial;
+        background: #f4f4f4;
+    }
+
+    .map-container {
+        position: relative;
+        width: 600px;
+        margin: auto;
+    }
+
+    .map-container img {
+        width: 100%;
+        display: block;
+    }
+
+    .map-container svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    circle {
+        fill: red;
+        cursor: pointer;
+    }
+
+    circle:hover {
+        fill: orange;
+        transform: scale(1.5);
+    }
+</style>
+</head>
+
+<body>
+
+<h2>India State Clickable Map</h2>
+<p>Click on states</p>
+
+<div class="map-container">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/7/74/India-map-en.svg">
+
+<svg viewBox="0 0 600 700">
+
+    <!-- GRID (same as yours) -->
+    <g stroke="#999" stroke-width="0.5">
+        <line x1="100" y1="0" x2="100" y2="700"/>
+        <line x1="200" y1="0" x2="200" y2="700"/>
+        <line x1="300" y1="0" x2="300" y2="700"/>
+        <line x1="400" y1="0" x2="400" y2="700"/>
+        <line x1="500" y1="0" x2="500" y2="700"/>
+
+        <line x1="0" y1="100" x2="600" y2="100"/>
+        <line x1="0" y1="200" x2="600" y2="200"/>
+        <line x1="0" y1="300" x2="600" y2="300"/>
+        <line x1="0" y1="400" x2="600" y2="400"/>
+        <line x1="0" y1="500" x2="600" y2="500"/>
+        <line x1="0" y1="600" x2="600" y2="600"/>
+    </g>
+
+    <!-- STATES (using X-Y grid logic) -->
+
+    <!-- Punjab -->
+    <a href="https://en.wikipedia.org/wiki/Punjab,_India" target="_blank">
+        <circle cx="200" cy="150" r="6"/>
+    </a>
+
+    <!-- Haryana -->
+    <a href="https://en.wikipedia.org/wiki/Haryana" target="_blank">
+        <circle cx="240" cy="180" r="6"/>
+    </a>
+
+    <!-- Delhi -->
+    <a href="https://en.wikipedia.org/wiki/Delhi" target="_blank">
+        <circle cx="260" cy="200" r="5"/>
+    </a>
+
+    <!-- Rajasthan -->
+    <a href="https://en.wikipedia.org/wiki/Rajasthan" target="_blank">
+        <circle cx="180" cy="250" r="6"/>
+    </a>
+
+    <!-- Gujarat -->
+    <a href="https://en.wikipedia.org/wiki/Gujarat" target="_blank">
+        <circle cx="130" cy="330" r="6"/>
+    </a>
+
+    <!-- Madhya Pradesh -->
+    <a href="https://en.wikipedia.org/wiki/Madhya_Pradesh" target="_blank">
+        <circle cx="260" cy="320" r="6"/>
+    </a>
+
+    <!-- Uttar Pradesh -->
+    <a href="https://en.wikipedia.org/wiki/Uttar_Pradesh" target="_blank">
+        <circle cx="300" cy="250" r="6"/>
+    </a>
+
+    <!-- Bihar -->
+    <a href="https://en.wikipedia.org/wiki/Bihar" target="_blank">
+        <circle cx="350" cy="260" r="6"/>
+    </a>
+
+    <!-- West Bengal -->
+    <a href="https://en.wikipedia.org/wiki/West_Bengal" target="_blank">
+        <circle cx="420" cy="300" r="6"/>
+    </a>
+
+    <!-- Assam -->
+    <a href="https://en.wikipedia.org/wiki/Assam" target="_blank">
+        <circle cx="480" cy="260" r="6"/>
+    </a>
+
+    <!-- Odisha -->
+    <a href="https://en.wikipedia.org/wiki/Odisha" target="_blank">
+        <circle cx="360" cy="400" r="6"/>
+    </a>
+
+    <!-- Maharashtra -->
+    <a href="https://en.wikipedia.org/wiki/Maharashtra" target="_blank">
+        <circle cx="220" cy="420" r="6"/>
+    </a>
+
+    <!-- Telangana -->
+    <a href="https://en.wikipedia.org/wiki/Telangana" target="_blank">
+        <circle cx="300" cy="470" r="6"/>
+    </a>
+
+    <!-- Karnataka -->
+    <a href="https://en.wikipedia.org/wiki/Karnataka" target="_blank">
+        <circle cx="230" cy="520" r="6"/>
+    </a>
+
+    <!-- Andhra Pradesh -->
+    <a href="https://en.wikipedia.org/wiki/Andhra_Pradesh" target="_blank">
+        <circle cx="330" cy="540" r="6"/>
+    </a>
+
+    <!-- Kerala -->
+    <a href="https://en.wikipedia.org/wiki/Kerala" target="_blank">
+        <circle cx="210" cy="600" r="6"/>
+    </a>
+
+    <!-- Tamil Nadu -->
+    <a href="https://en.wikipedia.org/wiki/Tamil_Nadu" target="_blank">
+        <circle cx="270" cy="620" r="6"/>
+    </a>
+
+</svg>
+
+</div>
+
+</body>
+</html>
