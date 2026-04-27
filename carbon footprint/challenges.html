@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Challenges</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>🌍 EcoTrack</h2>
+
+    <ul>
+      <li onclick="go('indexx.html')">📊 Dashboard</li>
+      <li onclick="go('tracker.html')">🌿 CO2 Tracker</li>
+      <li onclick="go('marketplace.html')">🛒 Marketplace</li>
+      <li class="active">🏆 Challenges</li>
+      <li onclick="go('profile.html')">👤 Profile</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Challenges 🏆</h1>
+
+    <!-- CHALLENGES -->
+    <div id="challengeList"></div>
+
+    <!-- LEADERBOARD -->
+    <div class="card">
+      <h2>Leaderboard</h2>
+      <div id="leaderboard"></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+
+// NAV
+function go(page){
+  window.location.href = page;
+}
+
+// DATA
+let challenges = [
+  {name:"No Car Week 🚴", points:50},
+  {name:"Zero Plastic Day ♻️", points:30},
+  {name:"Plant a Tree 🌳", points:100}
+];
+
+// LOAD CHALLENGES
+function loadChallenges(){
+
+  const box = document.getElementById("challengeList");
+  box.innerHTML = "";
+
+  challenges.forEach((c,i)=>{
+
+    box.innerHTML += `
+      <div class="card">
+        <h3>${c.name}</h3>
+        <p>Reward: ${c.points} pts</p>
+        <button onclick="join(${i})">Join</button>
+      </div>
+    `;
+  });
+}
+
+// JOIN
+function join(i){
+
+  let score = parseInt(localStorage.getItem("score")) || 0;
+
+  score += challenges[i].points;
+
+  localStorage.setItem("score", score);
+
+  alert("Challenge Completed ✅ +" + challenges[i].points + " pts");
+
+  loadLeaderboard();
+}
+
+// LEADERBOARD
+function loadLeaderboard(){
+
+  const board = document.getElementById("leaderboard");
+
+  const score = localStorage.getItem("score") || 0;
+
+  board.innerHTML = `
+    <p>🥇 You - ${score} pts</p>
+    <p>🥈 User2 - 120 pts</p>
+    <p>🥉 User3 - 90 pts</p>
+  `;
+}
+
+// INIT
+window.onload = () => {
+  loadChallenges();
+  loadLeaderboard();
+};
+
+</script>
+
+</body>
+</html>

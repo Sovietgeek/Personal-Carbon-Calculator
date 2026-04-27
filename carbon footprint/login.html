@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EcoTrack Login</title>
+  <link rel="stylesheet" href="stle.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT SIDE -->
+  <div class="left">
+    <div class="logo">
+      🌍 <span>EcoTrack India</span>
+    </div>
+
+    <div class="globe"></div>
+
+    <h1>
+      Track, Reduce & <br>
+      <span>Save the Planet</span>
+    </h1>
+
+    <p>
+      Monitor your daily carbon emissions, discover eco-friendly products,
+      and join millions fighting climate change.
+    </p>
+
+    <div class="features">
+      <div>📊 Real-time Tracking</div>
+      <div>🛒 Green Marketplace</div>
+      <div>🏆 Earn Rewards</div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+
+    <!-- ✅ TABS -->
+    <div class="tabs">
+      <button id="tabLogin" class="active">Sign In</button>
+      <button id="tabRegister">Sign Up</button>
+    </div>
+
+    <!-- INPUT -->
+    <input type="text" id="username" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <!-- ✅ SINGLE BUTTON -->
+    <button class="btn" id="mainBtn" onclick="handleAuth()">
+      🌱 Sign In to EcoTrack
+    </button>
+
+    <!-- MESSAGE -->
+    <p id="message"></p>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div><strong>10L+</strong><br>CO2 Tracked</div>
+      <div><strong>50K+</strong><br>Users</div>
+      <div><strong>1M+</strong><br>Trees Saved</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>

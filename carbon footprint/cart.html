@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>🌍 EcoTrack</h2>
+
+    <ul>
+      <li onclick="go('indexx.html')">📊 Dashboard</li>
+      <li onclick="go('tracker.html')">🌿 CO2 Tracker</li>
+      <li onclick="go('marketplace.html')">🛒 Marketplace</li>
+      <li class="active">🛍 Cart</li>
+      <li onclick="go('profile.html')">👤 Profile</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Your Cart 🛒</h1>
+
+    <div id="cartList"></div>
+
+    <h2 id="total"></h2>
+
+    <button onclick="checkout()">Checkout</button>
+
+  </main>
+
+</div>
+
+<!-- 🔥 JS SAME FILE ME -->
+<script>
+
+function go(page){
+  window.location.href = page;
+}
+
+function loadCart(){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const list = document.getElementById("cartList");
+  list.innerHTML = "";
+
+  let total = 0;
+
+  cart.forEach((item, i)=>{
+    total += item.price;
+
+    list.innerHTML += `
+      <div class="card">
+        <h3>${item.name}</h3>
+        <p>₹${item.price}</p>
+        <button onclick="removeItem(${i})">Remove</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+function removeItem(i){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.splice(i,1);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  loadCart();
+}
+
+function checkout(){
+
+  alert("Order placed ✅");
+
+  localStorage.removeItem("cart");
+
+  loadCart();
+}
+
+window.onload = loadCart;
+
+</script>
+
+</body>
+</html>

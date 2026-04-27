@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CO2 Tracker</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>🌍 EcoTrack</h2>
+
+    <ul>
+      <li onclick="go('indexx.html')">📊 Dashboard</li>
+      <li class="active">🌿 CO2 Tracker</li>
+      <li onclick="go('marketplace.html')">🛒 Marketplace</li>
+      <li onclick="go('challenges.html')">🏆 Challenges</li>
+      <li onclick="go('profile.html')">👤 Profile</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>CO₂ Tracker</h1>
+
+    <!-- ADD ACTIVITY -->
+    <div class="card">
+      <h3>Add Activity</h3>
+
+      <input id="activity" placeholder="Activity name">
+      <select id="type">
+        <option value="travel">Travel</option>
+        <option value="food">Food</option>
+        <option value="energy">Energy</option>
+      </select>
+      <input id="value" placeholder="CO2 (kg)">
+
+      <button onclick="addActivity()">Add</button>
+    </div>
+
+    <!-- LIST -->
+    <div class="card">
+      <h3>Activities</h3>
+      <div id="activityList"></div>
+    </div>
+
+    <!-- CHART -->
+    <div class="card">
+      <h3>Carbon Breakdown</h3>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="tracker.js"></script>
+
+</body>
+</html>

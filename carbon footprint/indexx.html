@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Command Center</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="logo">🌱 <span>Eco</span>Track</div>
+        <ul class="nav-menu">
+            <li class="active">Dashboard</li>
+            <li>Impact Map</li>
+            <li>Community</li>
+            <li>Settings</li>
+        </ul>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="top-bar">
+            <div class="greeting">
+                <h1 id="user-greeting">Welcome, Eco Hero!</h1>
+                <p>Track your footprint and save the planet.</p>
+            </div>
+
+            <div class="user-info">
+                <span class="badge">⭐ Silver Guardian</span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <span class="icon">📊</span>
+                <div>
+                    <h3>Total Goals</h3>
+                    <p id="total">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card featured">
+                <span class="icon">🌿</span>
+                <div>
+                    <h3>CO2 Saved</h3>
+                    <p id="daily">0 kg</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="icon">✅</span>
+                <div>
+                    <h3>Completed</h3>
+                    <p id="completed">0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRID -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT -->
+            <div class="action-col">
+
+                <!-- ADD GOAL -->
+                <section class="glass-card">
+                    <h3>➕ Log New Activity</h3>
+
+                    <div class="form-grid">
+                        <input type="text" id="title" placeholder="Activity name...">
+
+                        <select id="category">
+                            <option value="travel">🚗 Travel</option>
+                            <option value="food">🥗 Food</option>
+                            <option value="energy">⚡ Energy</option>
+                        </select>
+
+                        <input type="number" id="target" placeholder="Target kg">
+
+                        <button class="btn-primary" onclick="addGoal()">
+                            Add Goal
+                        </button>
+                    </div>
+                </section>
+
+                <!-- GOALS -->
+                <section class="goals-section">
+                    <h3>Your Missions</h3>
+                    <div id="goalList" class="goal-grid"></div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="intel-col">
+
+                <!-- AI -->
+                <div class="ai-box">
+                    <span class="tag">💡 AI SMART TIP</span>
+                    <p id="ai-tip">Analyzing your habits...</p>
+                </div>
+
+                <!-- CHART -->
+                <div class="glass-card">
+                    <h3>📊 Impact Analysis</h3>
+                    <canvas id="chart"></canvas>
+                </div>
+
+                <!-- CARBON CALCULATOR -->
+                <div class="glass-card">
+                    <h3>🌍 Carbon Calculator</h3>
+
+                    <input id="km" type="number" placeholder="Enter travel km">
+                    <button onclick="calculateCarbon()">Calculate</button>
+
+                    <p id="carbonResult"></p>
+                </div>
+
+                <!-- LEADERBOARD -->
+                <div class="glass-card">
+                    <h3>🏆 Leaderboard</h3>
+                    <div id="leaderboard"></div>
+                </div>
+
+                <!-- HISTORY -->
+                <div class="glass-card">
+                    <h3>📜 Recent History</h3>
+                    <ul id="historyList" class="activity-feed"></ul>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

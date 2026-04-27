@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>🌍 EcoTrack</h2>
+
+    <ul>
+      <li onclick="go('indexx.html')">📊 Dashboard</li>
+      <li onclick="go('tracker.html')">🌿 CO2 Tracker</li>
+      <li onclick="go('marketplace.html')">🛒 Marketplace</li>
+      <li onclick="go('challenges.html')">🏆 Challenges</li>
+      <li class="active">👤 Profile</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>My Profile 👤</h1>
+
+    <!-- USER INFO -->
+    <div class="card">
+      <h3>Name</h3>
+      <p id="username">User</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid">
+
+      <div class="card">
+        <h3>Total Points</h3>
+        <p id="points">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Level</h3>
+        <p id="level">Beginner</p>
+      </div>
+
+      <div class="card">
+        <h3>Achievements</h3>
+        <p id="achievements">0</p>
+      </div>
+
+    </div>
+
+    <!-- BADGES -->
+    <div class="card">
+      <h3>Badges 🎖</h3>
+      <div id="badges"></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+
+// NAV
+function go(page){
+  window.location.href = page;
+}
+
+// LOAD PROFILE
+window.onload = () => {
+
+  const user = localStorage.getItem("user") || "Eco Hero";
+  const score = parseInt(localStorage.getItem("score")) || 0;
+
+  document.getElementById("username").innerText = user;
+  document.getElementById("points").innerText = score;
+
+  // LEVEL SYSTEM
+  let level = "Beginner";
+
+  if(score > 100) level = "Eco Warrior";
+  if(score > 300) level = "Planet Guardian";
+  if(score > 600) level = "Climate Hero";
+
+  document.getElementById("level").innerText = level;
+
+  // ACHIEVEMENTS
+  let achievements = 0;
+  if(score > 50) achievements++;
+  if(score > 200) achievements++;
+  if(score > 500) achievements++;
+
+  document.getElementById("achievements").innerText = achievements;
+
+  // BADGES
+  const badges = document.getElementById("badges");
+
+  if(score > 50) badges.innerHTML += "🥉 Starter Badge ";
+  if(score > 200) badges.innerHTML += "🥈 Green Badge ";
+  if(score > 500) badges.innerHTML += "🥇 Elite Badge ";
+
+};
+
+</script>
+
+</body>
+</html>
