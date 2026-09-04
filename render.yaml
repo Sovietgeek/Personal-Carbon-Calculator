@@ -35,9 +35,9 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
 
-      # --- JWT Secret (auto-generated) ---
+      # --- JWT Secret (at least 32 chars for HS256) ---
       - key: JWT_SECRET
-        generateValue: true
+        sync: false
 
       # --- AI Provider ---
       - key: GEMINI_API_KEY
