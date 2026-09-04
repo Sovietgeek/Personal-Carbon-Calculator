@@ -22,14 +22,16 @@ WORKDIR /app
 
 # Add a non-root user for security
 RUN addgroup -S ecoverse && adduser -S ecoverse -G ecoverse
-USER ecoverse
 
 # Copy the built JAR from stage 1
 COPY --from=build /app/target/*.jar app.jar
 
-# Copy Render startup script (parses DATABASE_URL, then runs the app)
+# Copy Render startup script and make it executable (must be before USER switch)
 COPY render-start.sh /app/render-start.sh
 RUN chmod +x /app/render-start.sh
+
+# Switch to non-root user after file setup
+USER ecoverse
 
 # Configurable defaults (overridden by docker-compose / Render env vars)
 ENV SPRING_PROFILES_ACTIVE=dev
