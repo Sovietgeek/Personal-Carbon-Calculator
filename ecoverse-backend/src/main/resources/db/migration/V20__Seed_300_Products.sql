@@ -3,6 +3,14 @@
 -- 330 products auto-generated across 13 eco categories
 -- ================================================================
 
+-- Ensure demo seller user (id=1) exists before inserting products with seller_id=1
+-- On fresh DB: V2 already seeds this user, so ON CONFLICT skips it
+-- On existing DB: V2 ran without the user seed, so this creates it
+INSERT INTO users (id, name, email, password, country, is_premium, joined_date, created_at, updated_at)
+VALUES (1, 'EcoVerse Demo Seller', 'seller@ecoverse.app',
+        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'India', FALSE, NOW(), NOW(), NOW())
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO products (id, seller_id, name, description, category, price, image_url, eco_rating, is_secondhand, is_available, stock, status, version, created_at, updated_at, brand, mrp, discount_percent, features, highlights, tags, rating, rating_count, delivery_days, weight_grams) VALUES
 (11, 1, 'Bamboo Cutlery Set (12-Piece)', 'Durable, reusable, and designed to reduce single-use plastic waste.', 'kitchen', 222.08, NULL, 5, false, TRUE, 44, 'ACTIVE', 0, NOW(), NOW(), 'Beco', 347.00, 36, '["BPA-Free & Non-Toxic","Handcrafted Quality","100% Natural Materials"]', 'Best Seller,Eco Pick', 'bamboo,cutlery,set,12piece,kitchen,eco', 3.41, 335, 3, 773),
 (12, 1, 'Stainless Steel Lunch Box', 'Certified organic and ethically sourced. Supports fair trade practices.', 'kitchen', 728.95, NULL, 4, false, TRUE, 148, 'ACTIVE', 0, NOW(), NOW(), 'RawNature', 1195.00, 39, '["Handcrafted Quality","BPA-Free & Non-Toxic","Long-Lasting Durability"]', 'Best Seller,Free Delivery', 'stainless,steel,lunch,box,kitchen,eco', 3.09, 294, 3, 1039),
