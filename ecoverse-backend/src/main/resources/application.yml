@@ -318,6 +318,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     clean-disabled: true
+    repair-enabled: true
 
   sql:
     init:
