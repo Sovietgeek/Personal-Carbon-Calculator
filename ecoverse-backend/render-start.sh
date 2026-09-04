@@ -7,10 +7,7 @@
 
 echo "=== EcoVerse Render Startup ==="
 
-# If DATABASE_URL is in Render's format (postgresql://user:pass@host:port/db),
-# parse it properly and construct a valid JDBC URL
 if [ -n "$DATABASE_URL" ]; then
-    # Check if it's already in JDBC format
     case "$DATABASE_URL" in
         jdbc:postgresql://*)
             echo "DATABASE_URL already in JDBC format, using as-is"
@@ -19,22 +16,28 @@ if [ -n "$DATABASE_URL" ]; then
         postgresql://*)
             echo "Converting Render DATABASE_URL to JDBC format..."
 
-            # Parse: postgresql://user:password@host:port/database
-            # Extract user
-            DB_USER=$(echo "$DATABASE_URL" | sed -E 's|postgresql://([^:]+):([^@]+)@.*|\1|')
-            # Extract password
-            DB_PASS=$(echo "$DATABASE_URL" | sed -E 's|postgresql://([^:]+):([^@]+)@.*|\2|')
-            # Extract host:port/database (everything after the @)
-            HOST_PART=$(echo "$DATABASE_URL" | sed -E 's|postgresql://[^@]+@(.*)|\1|')
-            # Extract host (before the colon for port, or before the slash for db)
-            DB_HOST=$(echo "$HOST_PART" | sed -E 's|([^:]+).*|\1|')
-            # Extract port (if present)
-            DB_PORT=$(echo "$HOST_PART" | sed -n -E 's|[^:]+:([0-9]+).*|\1|p')
-            # Extract database name (after the last /)
-            DB_NAME=$(echo "$HOST_PART" | sed -E 's|.*/([^?]+).*|\1|')
+            # Strip the postgresql:// prefix
+            AFTER_SCHEME=$(echo "$DATABASE_URL" | sed 's|postgresql://||')
 
-            # Default port if not present
-            if [ -z "$DB_PORT" ]; then
+            # Extract user:password (before the @)
+            USER_PASS=$(echo "$AFTER_SCHEME" | cut -d'@' -f1)
+            DB_USER=$(echo "$USER_PASS" | cut -d':' -f1)
+            DB_PASS=$(echo "$USER_PASS" | cut -d':' -f2-)
+
+            # Extract host:port/dbname (after the @)
+            AFTER_AT=$(echo "$AFTER_SCHEME" | cut -d'@' -f2-)
+
+            # host:port is before the first /
+            HOST_PORT=$(echo "$AFTER_AT" | cut -d'/' -f1)
+            # database name is after the first /
+            DB_NAME=$(echo "$AFTER_AT" | cut -d'/' -f2- | cut -d'?' -f1)
+
+            # Split host and port (port may be absent)
+            if echo "$HOST_PORT" | grep -q ':'; then
+                DB_HOST=$(echo "$HOST_PORT" | cut -d':' -f1)
+                DB_PORT=$(echo "$HOST_PORT" | cut -d':' -f2)
+            else
+                DB_HOST="$HOST_PORT"
                 DB_PORT="5432"
             fi
 
@@ -49,10 +52,10 @@ if [ -n "$DATABASE_URL" ]; then
             echo "DB port: ${DB_PORT}"
             echo "DB name: ${DB_NAME}"
             echo "DB user: ${DB_USER}"
-            echo "JDBC URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
+            echo "JDBC URL: ${JDBC_URL}"
             ;;
         *)
-            echo "WARNING: DATABASE_URL format not recognized: ${DATABASE_URL%:*}//..."
+            echo "WARNING: DATABASE_URL format not recognized"
             ;;
     esac
 else
@@ -60,7 +63,6 @@ else
 fi
 
 # Render assigns a PORT env var (usually 10000).
-# Spring Boot defaults to 8081 — override if PORT is set.
 if [ -n "$PORT" ]; then
     export SERVER_PORT="$PORT"
     echo "Render PORT detected: $PORT"
