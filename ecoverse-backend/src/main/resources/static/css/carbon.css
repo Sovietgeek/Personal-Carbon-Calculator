@@ -1,0 +1,360 @@
+/**
+ * EcoVerse — Carbon Tracker Styles
+ * Risk hero, saved cards, budget, entry forms, charts, suggestions
+ */
+
+/* ============================================================
+   CARBON RISK HERO
+   ============================================================ */
+.carbon-risk-hero {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--space-6);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    margin-bottom: var(--space-4);
+    align-items: center;
+}
+
+.carbon-risk-gauge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.carbon-risk-gauge {
+    width: 200px;
+    height: 120px;
+}
+
+.carbon-risk-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: calc(-1 * var(--space-12));
+    text-align: center;
+}
+
+.carbon-risk-unit {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: var(--space-1);
+}
+
+.carbon-risk-info { display: flex; flex-direction: column; }
+
+.carbon-risk-level-badge { margin-bottom: var(--space-3); }
+
+.carbon-risk-title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.carbon-risk-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+}
+
+.carbon-risk-compare {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.risk-compare-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+}
+
+.risk-compare-label {
+    width: 80px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-align: right;
+}
+
+.risk-compare-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.risk-compare-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+.risk-compare-fill--you { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.risk-compare-fill--india { background: rgba(245, 158, 11, 0.5); }
+.risk-compare-fill--global { background: rgba(239, 68, 68, 0.5); }
+
+.risk-compare-val {
+    width: 50px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* ============================================================
+   CARBON SAVED GRID
+   ============================================================ */
+.carbon-saved-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.carbon-saved-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    transition: all var(--transition-base);
+}
+.carbon-saved-card:hover { border-color: var(--primary); }
+
+.carbon-saved-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xl);
+    flex-shrink: 0;
+}
+.carbon-saved-card--emitted .carbon-saved-icon { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+.carbon-saved-card--saved .carbon-saved-icon { background: rgba(16, 185, 129, 0.12); color: var(--primary); }
+.carbon-saved-card--net .carbon-saved-icon { background: rgba(99, 102, 241, 0.12); color: var(--info); }
+
+.carbon-saved-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.carbon-saved-value {
+    font-size: var(--text-xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.carbon-saved-sub {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+/* ============================================================
+   CARBON SUMMARY BAR
+   ============================================================ */
+.carbon-summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
+}
+
+.carbon-summary-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-1);
+}
+
+.carbon-summary-value {
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   CARBON BUDGET
+   ============================================================ */
+.carbon-budget-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+}
+
+.carbon-budget-remaining {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   CARBON GRID (INPUT + CHARTS)
+   ============================================================ */
+.carbon-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.carbon-input-card { overflow: visible; }
+
+/* Category Tabs */
+.carbon-cat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+}
+
+.carbon-cat-btn {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+.carbon-cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+.carbon-cat-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Category Forms */
+.carbon-cat-form { display: none; }
+.carbon-cat-form.active { display: block; }
+
+.carbon-calc-preview {
+    padding: var(--space-3);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin: var(--space-3) 0;
+}
+.carbon-calc-preview strong {
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Time Filter */
+.time-filter-row {
+    display: flex;
+    gap: var(--space-1);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 3px;
+}
+
+.time-btn {
+    flex: 1;
+    padding: var(--space-2);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+.time-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* ============================================================
+   SUGGESTIONS
+   ============================================================ */
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    transition: background var(--transition-fast);
+}
+.suggestion-item:hover { background: var(--bg-card); }
+
+.suggestion-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.suggestion-content { flex: 1; }
+
+.suggestion-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.suggestion-desc {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+.suggestion-save {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   CARBON CHARTS COLUMN
+   ============================================================ */
+.carbon-charts-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}

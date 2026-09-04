@@ -1,0 +1,340 @@
+server:
+  port: 8081
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+  tomcat:
+    max-http-form-post-size: 100KB
+    max-swallow-size: 1MB
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+  # Forwarded headers: NOT set in default profile (H2 local dev).
+  # Set in dev/staging/prod profiles for reverse proxy compatibility.
+  # When behind a TLS-terminating proxy, set SERVER_FORWARD_HEADERS_STRATEGY=FRAMEWORK.
+
+spring:
+  application:
+    name: ecoverse-backend
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  # Pagination safety — prevent unbounded query results
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 100
+        one-indexed-parameters: false
+
+  # ===== DEFAULT: H2 In-Memory (IntelliJ / quick start — no setup needed) =====
+  datasource:
+    url: jdbc:h2:mem:ecoverse;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # ===== Spring AI — Multi-provider Chat =====
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o-mini}
+          temperature: 0.7
+          max-tokens: 800
+    google-genai:
+      api-key: ${GEMINI_API_KEY:}
+      chat:
+        options:
+          model: ${GEMINI_MODEL:gemini-3.5-flash-lite}
+          temperature: 0.7
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+  flyway:
+    enabled: false
+
+  cache:
+    type: caffeine
+
+  sql:
+    init:
+      mode: never
+
+  # ===== OAuth2 — Google Login =====
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:dummy-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:dummy-secret}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+  # ===== Email — SMTP (for verification, password reset) =====
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          # Auth enabled only when real SMTP credentials are configured.
+          # MailHog (local dev) requires no auth — see .env MAIL_SMTP_AUTH.
+          auth: ${MAIL_SMTP_AUTH:false}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS:false}
+          ssl:
+            trust: smtp.gmail.com
+    from-address: ${MAIL_FROM:noreply@ecoverse.app}
+
+jwt:
+  secret: ${JWT_SECRET:}   # REQUIRED — must be set via environment variable. Min 256 bits (32 bytes).
+  access-expiration: 900000       # 15 minutes
+  refresh-expiration: 604800000   # 7 days
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:}
+  key-secret: ${RAZORPAY_KEY_SECRET:}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
+  currency: ${RAZORPAY_CURRENCY:INR}
+  mode: ${RAZORPAY_MODE:test}      # test | live
+  payment-expiry-minutes: ${RAZORPAY_PAYMENT_EXPIRY_MINUTES:30}
+
+open-meteo:
+  base-url: https://api.open-meteo.com/v1
+
+rss2json:
+  base-url: https://api.rss2json.com/v1/api.json
+
+gnews:
+  api-key: ${GNEWS_API_KEY:}
+  base-url: https://gnews.io/api/v4
+
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5500,http://127.0.0.1:5500,http://localhost:8081,http://127.0.0.1:8081}
+
+  rate-limit:
+    login-per-minute: 5
+    api-per-minute: 60
+    password-reset-per-hour: 3
+    refresh-per-minute: 30
+    resend-verification-per-minute: 5
+    oauth-exchange-per-minute: 10
+
+  cookie:
+    secure: ${COOKIE_SECURE:true}
+    domain: ${COOKIE_DOMAIN:}
+
+  email:
+    verification-base-url: ${APP_URL:http://localhost:8081}
+    notifications-enabled: ${EMAIL_NOTIFICATIONS_ENABLED:true}
+
+  admin:
+    email: ${ADMIN_EMAIL:}       # Set to an existing user's email to bootstrap first ADMIN on startup
+    password: ${ADMIN_PASSWORD:}  # If set, creates the admin user if they don't exist yet
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Actuator — health + info only, secured
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: EcoVerse
+    description: Carbon Intelligence Platform
+
+logging:
+  level:
+    com.ecoverse: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{requestId:-}] %-5level %logger{36} - %msg%n"
+
+---
+# ==============================
+# DEV PROFILE (Local PostgreSQL + Flyway)
+# ==============================
+server:
+  forward-headers-strategy: ${SERVER_FORWARD_HEADERS_STRATEGY:FRAMEWORK}
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecoverse
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  h2:
+    console:
+      enabled: false
+
+  sql:
+    init:
+      mode: never
+
+---
+# ==============================
+# STAGING PROFILE
+# ==============================
+server:
+  forward-headers-strategy: ${SERVER_FORWARD_HEADERS_STRATEGY:FRAMEWORK}
+
+spring:
+  config:
+    activate:
+      on-profile: staging
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecoverse_staging}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  sql:
+    init:
+      mode: never
+
+---
+# ==============================
+# PRODUCTION PROFILE
+# ==============================
+server:
+  forward-headers-strategy: ${SERVER_FORWARD_HEADERS_STRATEGY:FRAMEWORK}
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL}}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 25
+      minimum-idle: 10
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true
+
+  sql:
+    init:
+      mode: never
+
+  h2:
+    console:
+      enabled: false
+
+# Disable API docs in production
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    com.ecoverse: WARN
+    org.springframework.security: ERROR

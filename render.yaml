@@ -1,0 +1,79 @@
+# ================================================================
+# EcoVerse — Render.com Blueprint
+# Deploy: Connect GitHub repo → Render auto-detects this file
+#
+# Free tier limits:
+#   - Web Service: 750 hours/month (auto-spins down after 15min idle)
+#   - PostgreSQL:  90 days, then expires (free tier only)
+#   - 512MB RAM per service
+# ================================================================
+
+databases:
+  - name: ecoverse-db
+    plan: free
+    # Render provides DATABASE_URL automatically as:
+    #   postgresql://user:pass@host:port/dbname
+    # Our start script converts this to JDBC format for Spring Boot
+
+services:
+  - type: web
+    name: ecoverse-backend
+    runtime: docker
+    plan: free
+    # Docker context is the backend subdirectory
+    dockerContext: ecoverse-backend
+    dockerfilePath: ./ecoverse-backend/Dockerfile
+    # Render auto-assigns PORT env var; Spring Boot uses 8081 internally
+    envVars:
+      # --- Database (auto-linked from the database above) ---
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecoverse-db
+          property: connectionString
+
+      # --- Spring Boot Profile ---
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # --- JWT Secret (auto-generated) ---
+      - key: JWT_SECRET
+        generateValue: true
+
+      # --- AI Provider ---
+      - key: GEMINI_API_KEY
+        sync: false
+
+      # --- Admin bootstrap ---
+      - key: ADMIN_EMAIL
+        value: admin@ecoverse.app
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      # --- CORS: allow the Render URL + localhost for dev ---
+      - key: CORS_ORIGINS
+        value: "*"
+
+      # --- Cookie settings for HTTPS ---
+      - key: COOKIE_SECURE
+        value: "true"
+
+      # --- Forward headers (behind Render's reverse proxy) ---
+      - key: SERVER_FORWARD_HEADERS_STRATEGY
+        value: FRAMEWORK
+
+      # --- App URL (self-referencing) ---
+      - key: APP_URL
+        fromService:
+          name: ecoverse-backend
+          type: web
+          property: hostUrl
+
+      # --- Email (disabled by default — set SMTP vars in Render dashboard if needed) ---
+      - key: MAIL_SMTP_AUTH
+        value: "false"
+      - key: MAIL_SMTP_STARTTLS
+        value: "false"
+
+      # --- OpenAI (optional) ---
+      - key: OPENAI_API_KEY
+        sync: false

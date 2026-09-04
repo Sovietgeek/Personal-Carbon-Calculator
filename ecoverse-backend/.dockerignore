@@ -1,0 +1,12 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.tmp
+.DS_Store
+.git
+.gitignore
+.idea
+*.iml
+data/
+.env
+README.md

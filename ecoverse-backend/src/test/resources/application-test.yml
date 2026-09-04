@@ -1,0 +1,44 @@
+# Test profile — used by unit tests and integration tests
+jwt:
+  secret: test-secret-key-that-is-at-least-64-bytes-long-for-hs512-algorithm-testing-XXXXXX
+
+spring:
+  mail:
+    host: localhost
+    port: 25
+    username: test@test.com
+    password: test
+
+  # For non-Testcontainers tests, H2 auto-config is fine.
+  # Testcontainers tests override these via @DynamicPropertySource.
+  datasource:
+    url: jdbc:h2:mem:ecoverse_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+  h2:
+    console:
+      enabled: false
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:5500
+  email:
+    notifications-enabled: false
+
+razorpay:
+  key-id: test_key_id
+  key-secret: test_key_secret
+  webhook-secret: test_webhook_secret
+  mode: test

@@ -1,0 +1,116 @@
+/**
+ * EcoVerse — Profile & Settings Styles
+ */
+
+/* ============================================================
+   PROFILE GRID
+   ============================================================ */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-4);
+}
+
+.profile-card {
+    text-align: center;
+    padding: var(--space-8) var(--space-6);
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: white;
+    margin: 0 auto var(--space-4);
+}
+
+.profile-name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.profile-email {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+.profile-joined {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-2);
+}
+
+.profile-stats-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-light);
+}
+
+.profile-stat { text-align: center; }
+
+.profile-stat-val {
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.profile-stat-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   SETTINGS SECTIONS
+   ============================================================ */
+.settings-section {
+    padding: var(--space-5) 0;
+}
+.settings-section:first-child { padding-top: 0; }
+
+.settings-section-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+.settings-section-title i { color: var(--primary); }
+
+.settings-section--danger .settings-section-title i { color: var(--danger); }
+
+.settings-divider {
+    border-top: 1px solid var(--border-light);
+}
+
+.form-hint {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+.theme-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.settings-actions-row {
+    display: flex;
+    gap: var(--space-3);
+}

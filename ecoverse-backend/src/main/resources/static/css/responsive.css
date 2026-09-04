@@ -1,0 +1,215 @@
+/**
+ * EcoVerse — Responsive Styles
+ * Mobile-first breakpoints: 640px, 768px, 1024px, 1280px
+ */
+
+/* ============================================================
+   XL DESKTOP (> 1280px)
+   ============================================================ */
+@media (min-width: 1280px) {
+    .shop-products-grid { grid-template-columns: repeat(4, 1fr); }
+    .badges-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+/* ============================================================
+   DESKTOP (1024px - 1279px)
+   ============================================================ */
+@media (max-width: 1279px) {
+    .shop-products-grid { grid-template-columns: repeat(3, 1fr); }
+    .badges-grid { grid-template-columns: repeat(5, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ============================================================
+   TABLET (768px - 1023px)
+   ============================================================ */
+@media (max-width: 1023px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: var(--z-modal);
+    }
+    .sidebar.sidebar-open { transform: translateX(0); }
+
+    .main-content { margin-left: 0; }
+
+    .topbar-hamburger { display: flex; }
+
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-grid--health { grid-template-columns: repeat(2, 1fr); }
+
+    .dash-grid-2 { grid-template-columns: 1fr; }
+    .carbon-grid { grid-template-columns: 1fr; }
+    .health-grid { grid-template-columns: 1fr; }
+    .profile-grid { grid-template-columns: 1fr; }
+
+    .carbon-risk-hero { grid-template-columns: 1fr; text-align: center; }
+    .carbon-risk-gauge-wrap { margin: 0 auto; }
+    .carbon-risk-compare { max-width: 400px; margin: 0 auto; }
+
+    .carbon-saved-grid { grid-template-columns: 1fr; }
+    .carbon-summary-bar { grid-template-columns: repeat(2, 1fr); }
+
+    .weather-details-grid { grid-template-columns: repeat(2, 1fr); }
+    .forecast-row { grid-template-columns: repeat(4, 1fr); }
+
+    .news-grid { grid-template-columns: repeat(2, 1fr); }
+    .shop-products-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .badges-grid { grid-template-columns: repeat(4, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr 1fr; }
+
+    .product-detail-grid { grid-template-columns: 1fr; }
+    .premium-features-grid { grid-template-columns: repeat(2, 1fr); }
+    .ai-suggestion-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .health-mini-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   MOBILE (< 768px)
+   ============================================================ */
+@media (max-width: 767px) {
+    :root {
+        --space-6: 16px;
+        --space-8: 20px;
+    }
+
+    .sidebar { display: none; }
+    .sidebar.sidebar-open { display: flex; }
+    .mobile-nav { display: flex; }
+
+    .main-content {
+        margin-left: 0;
+        padding-bottom: 72px;
+    }
+
+    .topbar {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .topbar-hamburger { display: flex; }
+    .topbar-mobile-logout { display: inline-flex !important; }
+
+    .content-area {
+        padding: var(--space-4);
+    }
+
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    .stats-grid--health { grid-template-columns: 1fr 1fr; }
+
+    .stat-card { padding: var(--space-3); }
+    .stat-value { font-size: var(--text-lg); }
+    .stat-icon { width: 40px; height: 40px; font-size: var(--text-base); }
+
+    .dash-grid-2 { grid-template-columns: 1fr; }
+    .carbon-grid { grid-template-columns: 1fr; }
+    .health-grid { grid-template-columns: 1fr; }
+    .profile-grid { grid-template-columns: 1fr; }
+
+    .carbon-risk-hero { grid-template-columns: 1fr; padding: var(--space-4); }
+    .carbon-risk-value { font-size: var(--text-2xl); }
+    .carbon-risk-gauge { width: 160px; height: 100px; }
+    .carbon-risk-title { font-size: var(--text-base); }
+
+    .carbon-saved-grid { grid-template-columns: 1fr; }
+    .carbon-summary-bar { grid-template-columns: 1fr 1fr; }
+
+    .weather-hero { padding: var(--space-5); }
+    .weather-temp-big { font-size: 56px; }
+    .weather-icon-big { font-size: 40px; }
+    .weather-details-grid { grid-template-columns: repeat(2, 1fr); }
+    .forecast-row { grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+
+    .news-header { flex-direction: column; }
+    .news-grid { grid-template-columns: 1fr; }
+    .news-featured-title { font-size: var(--text-base); }
+
+    .shop-header { flex-direction: column; }
+    .shop-products-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    .shop-impact-bar { flex-direction: column; gap: var(--space-2); }
+
+    .badges-grid { grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+    .badge-item { padding: var(--space-2); }
+    .badge-icon { width: 40px; height: 40px; font-size: var(--text-base); }
+    .badge-name { font-size: 10px; }
+
+    .pricing-grid { grid-template-columns: 1fr; }
+    .premium-features-grid { grid-template-columns: 1fr 1fr; }
+
+    .product-detail-grid { grid-template-columns: 1fr; }
+    .product-detail-image { height: 200px; }
+
+    .profile-stats-row { gap: var(--space-4); }
+
+    .cart-drawer { width: 100%; right: -100%; }
+
+    .notification-panel { width: 100%; right: -100%; }
+
+    .tip-featured { flex-direction: column; text-align: center; }
+
+    .ai-chat-window { height: 400px; }
+    .ai-suggestion-grid { grid-template-columns: 1fr 1fr; }
+
+    .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .form-row { grid-template-columns: 1fr; }
+
+    .health-mini-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .streak-meta { gap: var(--space-4); flex-wrap: wrap; }
+
+    /* Auth screen mobile */
+    .auth-container { padding: var(--space-4); }
+    .auth-card { padding: var(--space-5); }
+
+    /* Hide on mobile */
+    .hide-mobile { display: none !important; }
+
+    /* Mobile sidebar overlay */
+    .mobile-sidebar-overlay.open { display: block; }
+
+    /* Modal mobile */
+    .modal-panel { max-height: 100vh; border-radius: 0; }
+    .modal-panel--sm, .modal-panel--md, .modal-panel--lg { max-width: 100%; }
+}
+
+/* ============================================================
+   SMALL MOBILE (< 480px)
+   ============================================================ */
+@media (max-width: 479px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+
+    .shop-products-grid { grid-template-columns: 1fr 1fr; }
+    .shop-cat-btn { font-size: 10px; padding: var(--space-1) var(--space-2); }
+
+    .weather-temp-big { font-size: 48px; }
+    .weather-details-grid { grid-template-columns: 1fr 1fr; }
+
+    .badges-grid { grid-template-columns: repeat(3, 1fr); }
+
+    .premium-features-grid { grid-template-columns: 1fr; }
+
+    .carbon-summary-bar { grid-template-columns: 1fr; }
+
+    .ai-suggestion-grid { grid-template-columns: 1fr; }
+
+    .quick-actions-grid { grid-template-columns: 1fr 1fr; }
+
+    .forecast-row { grid-template-columns: 1fr; }
+
+    .news-cat-btn { font-size: 10px; padding: var(--space-1) var(--space-2); }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+    .sidebar, .topbar, .mobile-nav, .cart-drawer,
+    .notification-panel, .btn, #toast-container { display: none !important; }
+
+    .main-content { margin-left: 0 !important; }
+    .content-area { padding: 0 !important; }
+
+    body { background: white; color: black; }
+    .card { border: 1px solid #ddd; box-shadow: none; break-inside: avoid; }
+}

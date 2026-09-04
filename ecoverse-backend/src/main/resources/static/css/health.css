@@ -1,0 +1,156 @@
+/**
+ * EcoVerse — Health Tracker Styles
+ * Stats, sub-tabs, forms, water tracker, BMI, charts
+ */
+
+/* ============================================================
+   HEALTH STATS GRID
+   ============================================================ */
+.stats-grid--health {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.stat-card--steps .stat-icon { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+.stat-card--calories .stat-icon { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.stat-card--sleep .stat-icon { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
+.stat-card--water .stat-icon { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+
+/* ============================================================
+   HEALTH GRID
+   ============================================================ */
+.health-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: var(--space-4);
+}
+
+.health-charts-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+/* ============================================================
+   HEALTH SUB TABS
+   ============================================================ */
+.health-sub-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-5);
+}
+
+.health-sub-btn {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+.health-sub-btn:hover { border-color: var(--primary); color: var(--primary); }
+.health-sub-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.health-form { display: none; }
+.health-form.active { display: block; }
+
+/* ============================================================
+   WATER TRACKER
+   ============================================================ */
+.water-tracker-visual {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    justify-content: center;
+}
+
+.water-glass {
+    width: 36px;
+    height: 48px;
+    border: 2px solid var(--border);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    background: var(--bg-tertiary);
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+.water-glass.filled {
+    border-color: var(--info);
+}
+.water-glass.filled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to top, #3b82f6, #93c5fd);
+    animation: water-fill 0.5s ease;
+}
+
+@keyframes water-fill {
+    from { height: 0; }
+    to { height: 100%; }
+}
+
+.water-quick-btns {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    justify-content: center;
+}
+
+.water-preset {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+.water-preset:hover {
+    border-color: var(--info);
+    color: var(--info);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+/* ============================================================
+   BMI CALCULATOR
+   ============================================================ */
+.bmi-result {
+    margin-top: var(--space-5);
+    padding: var(--space-5);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.bmi-value-display {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.bmi-category {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-top: var(--space-2);
+}
+
+.bmi-advice {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-top: var(--space-2);
+    line-height: 1.5;
+}

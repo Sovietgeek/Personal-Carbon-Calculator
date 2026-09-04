@@ -1,0 +1,158 @@
+/**
+ * EcoVerse — Design System Variables
+ * All colors, fonts, spacing, shadows as CSS custom properties
+ * Single source of truth — change here, affects entire app
+ */
+
+:root {
+    /* ============================================================
+       BRAND COLORS
+       ============================================================ */
+    --primary:          #059669;
+    --primary-hover:    #047857;
+    --primary-light:    #10b981;
+    --primary-dark:     #064e3b;
+    --primary-glow:     rgba(5, 150, 105, 0.3);
+
+    --accent:           #f59e0b;
+    --accent-hover:     #d97706;
+    --accent-light:     #fbbf24;
+    --accent-glow:      rgba(245, 158, 11, 0.3);
+    --gold:             #fbbf24;
+
+    /* Subtle backgrounds for badges/tags */
+    --primary-subtle:   rgba(5, 150, 105, 0.1);
+    --accent-bg:        rgba(245, 158, 11, 0.1);
+
+    /* ============================================================
+       SEMANTIC COLORS
+       ============================================================ */
+    --success:          #10b981;
+    --success-bg:       rgba(16, 185, 129, 0.1);
+    --warning:          #f59e0b;
+    --warning-bg:       rgba(245, 158, 11, 0.1);
+    --danger:           #ef4444;
+    --danger-bg:        rgba(239, 68, 68, 0.1);
+    --info:             #3b82f6;
+    --info-bg:          rgba(59, 130, 246, 0.1);
+
+    /* ============================================================
+       DARK THEME (Default)
+       ============================================================ */
+    --bg-primary:       #0f172a;
+    --bg-secondary:     #1e293b;
+    --bg-tertiary:      #334155;
+    --bg-card:          rgba(30, 41, 59, 0.8);
+    --bg-card-hover:    rgba(51, 65, 85, 0.9);
+    --bg-glass:         rgba(15, 23, 42, 0.7);
+
+    --text-primary:     #f8fafc;
+    --text-secondary:   #94a3b8;
+    --text-muted:       #64748b;
+    --text-faint:       #475569;
+
+    --border:           #334155;
+    --border-light:     rgba(51, 65, 85, 0.5);
+
+    /* ============================================================
+       SHADOWS
+       ============================================================ */
+    --shadow-sm:        0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md:        0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg:        0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-xl:        0 16px 48px rgba(0, 0, 0, 0.5);
+    --shadow-glow:     0 0 20px var(--primary-glow);
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    --font-body:        'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono:        'JetBrains Mono', 'Fira Code', monospace;
+    --font-display:     'Playfair Display', Georgia, serif;
+
+    --text-xs:          0.75rem;
+    --text-sm:          0.875rem;
+    --text-base:        1rem;
+    --text-lg:          1.125rem;
+    --text-xl:          1.25rem;
+    --text-2xl:         1.5rem;
+    --text-3xl:         1.875rem;
+    --text-4xl:         2.25rem;
+
+    /* ============================================================
+       SPACING
+       ============================================================ */
+    --space-1:          0.25rem;
+    --space-2:          0.5rem;
+    --space-3:          0.75rem;
+    --space-4:          1rem;
+    --space-5:          1.25rem;
+    --space-6:          1.5rem;
+    --space-8:          2rem;
+    --space-10:         2.5rem;
+    --space-12:         3rem;
+
+    /* ============================================================
+       BORDER RADIUS
+       ============================================================ */
+    --radius-sm:        6px;
+    --radius-md:        10px;
+    --radius-lg:        14px;
+    --radius-xl:        20px;
+    --radius-full:      9999px;
+
+    /* ============================================================
+       TRANSITIONS
+       ============================================================ */
+    --transition-fast:  150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base:  200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow:  300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ============================================================
+       Z-INDEX LAYERS
+       ============================================================ */
+    --z-sidebar:       100;
+    --z-topbar:         200;
+    --z-sticky:         250;
+    --z-overlay:       300;
+    --z-modal:          400;
+    --z-toast:          500;
+    --z-tooltip:        600;
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    --sidebar-width:    260px;
+    --topbar-height:    64px;
+    --mobile-nav-height: 64px;
+    --content-max-width: 1400px;
+}
+
+/* ============================================================
+   LIGHT THEME OVERRIDES
+   ============================================================ */
+.light-theme {
+    --bg-primary:       #f8fafc;
+    --bg-secondary:     #ffffff;
+    --bg-tertiary:     #f1f5f9;
+    --bg-card:          rgba(255, 255, 255, 0.9);
+    --bg-card-hover:    rgba(241, 245, 249, 1);
+    --bg-glass:         rgba(255, 255, 255, 0.7);
+
+    --text-primary:     #0f172a;
+    --text-secondary:   #475569;
+    --text-muted:       #94a3b8;
+    --text-faint:       #cbd5e1;
+
+    --border:           #e2e8f0;
+    --border-light:     rgba(226, 232, 240, 0.8);
+
+    --primary-subtle:   rgba(5, 150, 105, 0.08);
+    --accent-bg:        rgba(245, 158, 11, 0.08);
+    --primary-glow:     rgba(5, 150, 105, 0.15);
+
+    --shadow-sm:        0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md:        0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg:        0 8px 24px rgba(0, 0, 0, 0.1);
+    --shadow-xl:        0 16px 48px rgba(0, 0, 0, 0.12);
+}

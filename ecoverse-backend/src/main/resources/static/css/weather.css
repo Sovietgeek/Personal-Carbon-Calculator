@@ -1,0 +1,294 @@
+/**
+ * EcoVerse — Weather Styles
+ * Hero, detail cards, forecast, search, carbon insight
+ */
+
+/* ============================================================
+   WEATHER HERO
+   ============================================================ */
+.weather-hero {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(16, 185, 129, 0.08));
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+.weather-hero-main { display: flex; flex-direction: column; align-items: center; }
+
+.weather-location {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.weather-temp-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-3);
+}
+
+.weather-temp-big {
+    font-size: 72px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--info), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.weather-icon-big {
+    font-size: 56px;
+    color: var(--info);
+}
+
+.weather-desc {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.weather-date {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-2);
+}
+
+/* ============================================================
+   WEATHER DETAILS GRID
+   ============================================================ */
+.weather-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.weather-detail-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+.weather-detail-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.weather-detail-card i {
+    font-size: var(--text-xl);
+    color: var(--text-muted);
+    margin-bottom: var(--space-2);
+}
+
+.weather-detail-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.weather-detail-value {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: var(--space-1);
+}
+
+.weather-detail-card--aqi {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.weather-aqi-label {
+    font-size: var(--text-xs);
+    color: var(--primary);
+    font-weight: 500;
+    margin-top: var(--space-1);
+}
+
+/* ============================================================
+   FORECAST ROW
+   ============================================================ */
+.forecast-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--space-3);
+}
+
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.forecast-day-name {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.forecast-day-icon {
+    font-size: var(--text-2xl);
+    color: var(--info);
+}
+
+.forecast-day-temp {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.forecast-day-low {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   WEATHER SEARCH
+   ============================================================ */
+.weather-search-row {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.weather-search-row .input-icon-wrap {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: flex !important;
+    align-items: center;
+    position: relative;
+}
+
+#weather-search {
+    width: 100% !important;
+    min-width: 0;
+    flex: none;
+}
+
+.weather-search-row .btn {
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   WEATHER CARBON INSIGHT
+   ============================================================ */
+.card--insight {
+    border-color: rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent);
+}
+
+.card-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ============================================================
+   OUTDOOR ADVISORY (NEW)
+   ============================================================ */
+.outdoor-advisory {
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    margin-bottom: var(--space-4);
+}
+.outdoor-advisory--safe { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); }
+.outdoor-advisory--caution { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); }
+.outdoor-advisory--unhealthy { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); }
+.outdoor-advisory--hazardous { background: rgba(127, 29, 29, 0.08); border: 1px solid rgba(127, 29, 29, 0.2); }
+
+.advisory-level {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+.advisory-level--safe { color: var(--success); }
+.advisory-level--caution { color: var(--warning); }
+.advisory-level--unhealthy { color: var(--danger); }
+.advisory-level--hazardous { color: #991b1b; }
+
+.advisory-precautions {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+.advisory-precautions li {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    padding-left: var(--space-5);
+    position: relative;
+}
+.advisory-precautions li::before {
+    content: '•';
+    position: absolute;
+    left: var(--space-2);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.advisory-flags {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.advisory-flag {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+.advisory-flag--safe { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+.advisory-flag--warn { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.advisory-flag--danger { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+
+.hourly-aqi-strip {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+}
+
+.hourly-aqi-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    min-width: 60px;
+    font-size: var(--text-xs);
+}
+
+.hourly-aqi-val {
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+}

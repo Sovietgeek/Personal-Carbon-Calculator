@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EcoVerse — Carbon Intelligence Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<div id="notification-panel" class="notification-panel">
+    <div class="notification-panel-header"><h3>Notifications</h3><button data-action="closeNotifications"><i class="fa-solid fa-xmark"></i></button></div>
+    <div id="notification-list" class="notification-list"></div>
+</div>
+<div id="notification-overlay" class="notification-overlay" data-action="closeNotifications"></div>
+
+<!-- ============================================================
+     AUTH SCREEN
+     ============================================================ -->
+<section id="auth-screen" class="auth-screen">
+    <div class="auth-bg-orb auth-bg-orb--1"></div>
+    <div class="auth-bg-orb auth-bg-orb--2"></div>
+    <div class="auth-bg-orb auth-bg-orb--3"></div>
+    <div class="auth-container">
+        <div class="auth-brand">
+            <div class="auth-logo">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect width="52" height="52" rx="14" fill="url(#lg1)"/><path d="M26 12C26 12 18 20 18 28C18 32.4 21.6 36 26 36C30.4 36 34 32.4 34 28C34 20 26 12 26 12Z" fill="white" opacity="0.9"/><path d="M26 18V34" stroke="rgba(16,185,129,0.8)" stroke-width="1.5"/><defs><linearGradient id="lg1" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#064e3b"/></linearGradient></defs></svg>
+            </div>
+            <h1 class="auth-brand-name">EcoVerse</h1>
+            <p class="auth-brand-tagline">Carbon Intelligence Platform</p>
+        </div>
+
+        <div class="auth-card" id="login-box">
+            <div class="auth-card-header"><h2>Welcome Back</h2><p>Sign in to track your impact</p></div>
+            <form class="auth-form" data-no-submit>
+                <div class="form-group"><label class="form-label">Email Address</label><div class="input-icon-wrap"><i class="fa-solid fa-envelope input-icon"></i><input type="email" id="login-email" class="auth-input" placeholder="you@gmail.com"></div></div>
+                <div class="form-group"><label class="form-label">Password</label><div class="input-icon-wrap"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="login-password" class="auth-input" placeholder="Enter password"><button type="button" class="input-toggle-pw" data-action="togglePw" data-target="login-password"><i class="fa-solid fa-eye"></i></button></div></div>
+                <div class="form-row form-row--between"><label class="checkbox-label"><input type="checkbox" id="remember-me"><span class="checkbox-custom"></span>Remember me</label><button type="button" class="auth-link" data-action="forgotPassword">Forgot Password?</button></div>
+                <button type="button" class="btn btn-primary btn-full" data-action="login"><span>Sign In</span><i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+            <div class="auth-divider"><span>or continue with</span></div>
+            <div class="social-logins">
+                <button class="social-btn social-btn--google" data-action="googleLogin"><i class="fa-brands fa-google"></i></button>
+<button class="social-btn social-btn--apple" data-action="appleLogin"><i class="fa-brands fa-apple"></i></button>
+            </div>
+            <div class="auth-card-footer"><span>New user?</span><button class="auth-link" data-action="toggleAuth" data-mode="register">Create Account</button></div>
+        </div>
+
+        <div class="auth-card" id="register-box" style="display:none;">
+            <div class="auth-card-header"><h2>Join EcoVerse</h2><p>Start your sustainability journey</p></div>
+            <form class="auth-form" data-no-submit>
+                <div class="form-group"><label class="form-label">Full Name</label><div class="input-icon-wrap"><i class="fa-solid fa-user input-icon"></i><input type="text" id="reg-name" class="auth-input" placeholder="Your name"></div></div>
+                <div class="form-group"><label class="form-label">Email</label><div class="input-icon-wrap"><i class="fa-solid fa-envelope input-icon"></i><input type="email" id="reg-email" class="auth-input" placeholder="you@gmail.com"></div></div>
+                <div class="form-group"><label class="form-label">Country</label><div class="input-icon-wrap"><i class="fa-solid fa-globe input-icon"></i><select id="reg-country" class="auth-input auth-select"><option value="">Select country</option><option value="IN">India</option><option value="US">United States</option><option value="UK">United Kingdom</option><option value="CA">Canada</option><option value="AU">Australia</option><option value="DE">Germany</option><option value="FR">France</option><option value="JP">Japan</option><option value="CN">China</option><option value="BR">Brazil</option><option value="ZA">South Africa</option></select></div></div>
+                <div class="form-group"><label class="form-label">Password</label><div class="input-icon-wrap"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="reg-password" class="auth-input" placeholder="Min 8 characters"><button type="button" class="input-toggle-pw" data-action="togglePw" data-target="reg-password"><i class="fa-solid fa-eye"></i></button></div><div class="pw-strength-bar"><div id="pw-strength-fill" class="pw-strength-fill"></div></div><span id="pw-strength-text" class="pw-strength-text"></span></div>
+                <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="agree-terms"><span class="checkbox-custom"></span>I agree to Terms & Privacy Policy</label></div>
+                <button type="button" class="btn btn-primary btn-full" data-action="register"><span>Create Account</span><i class="fa-solid fa-leaf"></i></button>
+            </form>
+            <div class="auth-card-footer"><span>Have an account?</span><button class="auth-link" data-action="toggleAuth" data-mode="login">Sign In</button></div>
+        </div>
+        <p class="auth-secure-note"><i class="fa-solid fa-shield-halved"></i>256-bit encrypted · Your data stays private</p>
+    </div>
+</section>
+
+<!-- ============================================================
+     MAIN APP
+     ============================================================ -->
+<section id="app-screen" class="app-screen">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="sidebar-brand">
+                <svg width="32" height="32" viewBox="0 0 52 52" fill="none"><rect width="52" height="52" rx="14" fill="url(#lg2)"/><path d="M26 12C26 12 18 20 18 28C18 32.4 21.6 36 26 36C30.4 36 34 32.4 34 28C34 20 26 12 26 12Z" fill="white" opacity="0.9"/><defs><linearGradient id="lg2" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#064e3b"/></linearGradient></defs></svg>
+                <span class="sidebar-brand-text">EcoVerse</span>
+            </div>
+            <nav class="sidebar-nav">
+                <p class="nav-section-label" data-nav-group="user">Main</p>
+                <div class="nav-item active" data-tab="tab-dashboard" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></div>
+                <div class="nav-item" data-tab="tab-carbon" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-cloud"></i><span>Carbon Tracker</span></div>
+                <div class="nav-item" data-tab="tab-health" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-heart-pulse"></i><span>Health</span></div>
+                <div class="nav-item" data-action="aiToggle" data-nav-group="user"><i class="fa-solid fa-robot"></i><span>AI Chat</span></div>
+                <p class="nav-section-label" data-nav-group="user">Environment</p>
+                <div class="nav-item" data-tab="tab-weather" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-cloud-sun"></i><span>Live Weather</span></div>
+                <div class="nav-item" data-tab="tab-news" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-newspaper"></i><span>Eco News</span></div>
+                <div class="nav-item" data-tab="tab-tips" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-lightbulb"></i><span>Tips & Notes</span></div>
+                <p class="nav-section-label" data-nav-group="user">Lifestyle</p>
+                <div class="nav-item" data-tab="tab-shop" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-bag-shopping"></i><span>Eco Shop</span><span class="nav-badge">300+</span></div>
+                <div class="nav-item" data-tab="tab-achievements" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-trophy"></i><span>Achievements</span></div>
+                <p class="nav-section-label nav-section-label--seller" id="nav-section-business" style="display:none;" data-nav-group="user">Business</p>
+                <div class="nav-item" data-tab="tab-seller" id="nav-seller" data-action="switchTab" style="display:none;" data-nav-group="user"><i class="fa-solid fa-store"></i><span>Seller Dashboard</span></div>
+                <div class="nav-item" data-tab="tab-admin" id="nav-admin" data-action="switchTab" data-nav-group="admin"><i class="fa-solid fa-shield-halved"></i><span>Admin Panel</span></div>
+                <p class="nav-section-label" data-nav-group="user">Account</p>
+                <div class="nav-item" data-tab="tab-premium" data-action="openPremium" data-nav-group="user"><i class="fa-solid fa-seedling"></i><span>Features</span><span class="nav-badge nav-badge--gold">FREE</span></div>
+                <div class="nav-item" data-tab="tab-profile" data-action="switchTab" data-nav-group="user"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-avatar" id="sidebar-avatar">U</div>
+                    <div class="sidebar-user-detail"><span class="sidebar-user-name" id="sidebar-user-name">User</span><span class="sidebar-user-plan" id="sidebar-user-plan">Premium</span></div>
+                </div>
+                <button class="sidebar-logout-btn" data-action="logout"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+            </div>
+        </div>
+    </aside>
+
+    <nav class="mobile-nav" id="mobile-nav">
+        <button class="mobile-nav-item active" data-tab="tab-dashboard" data-action="switchTab"><i class="fa-solid fa-grid-2"></i><span>Home</span></button>
+        <button class="mobile-nav-item" data-tab="tab-carbon" data-action="switchTab"><i class="fa-solid fa-cloud"></i><span>Carbon</span></button>
+        <button class="mobile-nav-item" data-tab="tab-shop" data-action="switchTab"><i class="fa-solid fa-bag-shopping"></i><span>Shop</span></button>
+        <button class="mobile-nav-item" data-tab="tab-news" data-action="switchTab"><i class="fa-solid fa-newspaper"></i><span>News</span></button>
+        <button class="mobile-nav-item" data-tab="tab-profile" data-action="switchTab"><i class="fa-solid fa-gear"></i><span>More</span></button>
+    </nav>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="topbar-hamburger" id="hamburger-btn" data-action="toggleMobileSidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="topbar-left"><h2 class="topbar-greeting">Hello, <span id="user-display-name">User</span></h2><p class="topbar-subtitle" id="topbar-subtitle">Track your carbon impact</p></div>
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" id="theme-toggle-btn" data-action="toggleTheme" title="Theme"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
+                <button class="topbar-icon-btn" data-action="openNotifications"><i class="fa-solid fa-bell"></i><span class="notification-dot" id="notification-dot"></span></button>
+                <button class="topbar-icon-btn" data-action="shopOpenCart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></button>
+                <button class="topbar-icon-btn topbar-mobile-logout" id="mobile-logout" data-action="logout" style="display:none;"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <!-- ===== DASHBOARD ===== -->
+            <div id="tab-dashboard" class="tab-section active" role="region" aria-label="Dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card stat-card--carbon" role="status" aria-label="Carbon emissions today"><div class="stat-icon"><i class="fa-solid fa-cloud" aria-hidden="true"></i></div><div class="stat-info"><p class="stat-label">Carbon Today</p><h3 class="stat-value" id="dash-carbon-today" aria-live="polite">0.00 kg</h3><p class="stat-change" id="dash-carbon-risk-badge"><span class="risk-badge risk-badge--good">GOOD</span></p></div></div>
+                    <div class="stat-card stat-card--streak" role="status" aria-label="Current streak"><div class="stat-icon"><i class="fa-solid fa-fire" aria-hidden="true"></i></div><div class="stat-info"><p class="stat-label">Streak</p><h3 class="stat-value" id="dash-streak" aria-live="polite">0 days</h3><p class="stat-change" id="dash-streak-best">Best: 0</p></div></div>
+                    <div class="stat-card stat-card--health" role="status" aria-label="Health score"><div class="stat-icon"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></div><div class="stat-info"><p class="stat-label">Health Score</p><h3 class="stat-value" id="dash-health-score" aria-live="polite">--</h3><p class="stat-change" id="dash-health-steps"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> 0</p></div></div>
+                    <div class="stat-card stat-card--weather" role="status" aria-label="Current temperature"><div class="stat-icon"><i class="fa-solid fa-temperature-half" aria-hidden="true"></i></div><div class="stat-info"><p class="stat-label">Live Temp</p><h3 class="stat-value" id="dash-temp" aria-live="polite">--°</h3><p class="stat-change" id="dash-weather-city">Detecting...</p></div></div>
+                </div>
+                <div class="dash-grid-2">
+                    <div class="card"><div class="card-header-row"><div><h3 class="card-title">Carbon Trend</h3></div><div class="chart-period-toggle"><button class="period-btn active" data-action="changeDashChart" data-period="week">Week</button><button class="period-btn" data-action="changeDashChart" data-period="month">Month</button><button class="period-btn" data-action="changeDashChart" data-period="year">Year</button></div></div><div class="chart-container"><canvas id="dash-carbon-chart" aria-label="Carbon emissions trend chart" role="img"></canvas></div></div>
+                    <div class="card">
+                        <h3 class="card-title">Quick Actions</h3>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" data-action="switchTab" data-tab="tab-carbon"><div class="quick-action-icon quick-action-icon--carbon"><i class="fa-solid fa-plus"></i></div><span>Log Carbon</span></button>
+                            <button class="quick-action-btn" data-action="switchTab" data-tab="tab-health"><div class="quick-action-icon quick-action-icon--health"><i class="fa-solid fa-dumbbell"></i></div><span>Log Health</span></button>
+                            <button class="quick-action-btn" data-action="switchTab" data-tab="tab-shop"><div class="quick-action-icon quick-action-icon--shop"><i class="fa-solid fa-bag-shopping"></i></div><span>Eco Shop</span></button>
+                            <button class="quick-action-btn" data-action="switchTab" data-tab="tab-achievements"><div class="quick-action-icon quick-action-icon--badge"><i class="fa-solid fa-trophy"></i></div><span>Badges</span></button>
+                        </div>
+                        <div class="eco-tip-daily" id="dash-eco-tip"><div class="eco-tip-daily-icon"><i class="fa-solid fa-seedling"></i></div><div class="eco-tip-daily-content"><p class="eco-tip-daily-label">Eco Tip of the Day</p><p class="eco-tip-daily-text" id="dash-tip-text">Loading...</p></div></div>
+                    </div>
+                </div>
+                <div class="dash-grid-2">
+                    <div class="card"><div class="card-header-row"><h3 class="card-title">Health Snapshot</h3><button class="card-link" data-action="switchTab" data-tab="tab-health">View All</button></div>
+                        <div class="health-mini-grid">
+                            <div class="health-mini-item"><i class="fa-solid fa-shoe-prints" style="color:#6366f1;"></i><div><p class="health-mini-val" id="dash-steps">0</p><p class="health-mini-label">Steps</p></div></div>
+                            <div class="health-mini-item"><i class="fa-solid fa-fire-flame-curved" style="color:#ef4444;"></i><div><p class="health-mini-val" id="dash-calories">0</p><p class="health-mini-label">Cal</p></div></div>
+                            <div class="health-mini-item"><i class="fa-solid fa-moon" style="color:#a78bfa;"></i><div><p class="health-mini-val" id="dash-sleep">0h</p><p class="health-mini-label">Sleep</p></div></div>
+                            <div class="health-mini-item"><i class="fa-solid fa-weight-scale" style="color:#10b981;"></i><div><p class="health-mini-val" id="dash-weight">--</p><p class="health-mini-label">Weight</p></div></div>
+                            <div class="health-mini-item"><i class="fa-solid fa-droplet" style="color:#3b82f6;"></i><div><p class="health-mini-val" id="dash-water">0L</p><p class="health-mini-label">Water</p></div></div>
+                            <div class="health-mini-item"><i class="fa-solid fa-heart" style="color:#ec4899;"></i><div><p class="health-mini-val" id="dash-heartrate">--</p><p class="health-mini-label">HR</p></div></div>
+                        </div>
+                    </div>
+                    <div class="card"><div class="card-header-row"><h3 class="card-title">Carbon Breakdown</h3></div><div class="chart-container chart-container--sm"><canvas id="dash-breakdown-chart" aria-label="Carbon emissions by category chart" role="img"></canvas></div><div class="breakdown-legend" id="dash-breakdown-legend"></div></div>
+                </div>
+                <div class="dash-grid-2">
+                    <div class="card"><div class="card-header-row"><h3 class="card-title">Your Impact</h3></div><div class="leaderboard-list" id="dash-leaderboard"></div></div>
+                    <div class="card"><div class="card-header-row"><h3 class="card-title">Latest News</h3><button class="card-link" data-action="switchTab" data-tab="tab-news">All News</button></div><div class="news-mini-list" id="dash-news-mini"></div></div>
+                </div>
+            </div>
+
+            <!-- ===== CARBON TRACKER (ENHANCED) ===== -->
+            <div id="tab-carbon" class="tab-section">
+
+                <!-- NEW: Risk Level Hero -->
+                <div class="carbon-risk-hero" id="carbon-risk-hero">
+                    <div class="carbon-risk-gauge-wrap">
+                        <svg class="carbon-risk-gauge" viewBox="0 0 200 120" id="risk-gauge-svg">
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="var(--border)" stroke-width="12" stroke-linecap="round"/>
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="var(--primary)" stroke-width="12" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" id="risk-gauge-fill"/>
+                        </svg>
+                        <div class="carbon-risk-value" id="carbon-risk-value">0.00</div>
+                        <div class="carbon-risk-unit">kg CO₂ today</div>
+                    </div>
+                    <div class="carbon-risk-info">
+                        <div class="carbon-risk-level-badge" id="carbon-risk-level-badge"><span class="risk-badge risk-badge--excellent">EXCELLENT</span></div>
+                        <h2 class="carbon-risk-title" id="carbon-risk-title">Outstanding! You're below average</h2>
+                        <p class="carbon-risk-desc" id="carbon-risk-desc">Your daily emissions are significantly lower than the India average of 4.2 kg. Keep it up!</p>
+                        <div class="carbon-risk-compare" id="carbon-risk-compare">
+                            <div class="risk-compare-item"><span class="risk-compare-label">You</span><div class="risk-compare-bar"><div class="risk-compare-fill risk-compare-fill--you" id="risk-bar-you" style="width:0%"></div></div><span class="risk-compare-val" id="risk-val-you">0 kg</span></div>
+                            <div class="risk-compare-item"><span class="risk-compare-label">India Avg</span><div class="risk-compare-bar"><div class="risk-compare-fill risk-compare-fill--india" style="width:50%"></div></div><span class="risk-compare-val">4.2 kg</span></div>
+                            <div class="risk-compare-item"><span class="risk-compare-label">Global Avg</span><div class="risk-compare-bar"><div class="risk-compare-fill risk-compare-fill--global" style="width:75%"></div></div><span class="risk-compare-val">8.5 kg</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Saved vs Polluted -->
+                <div class="carbon-saved-grid">
+                    <div class="carbon-saved-card carbon-saved-card--emitted">
+                        <div class="carbon-saved-icon"><i class="fa-solid fa-smog"></i></div>
+                        <div><p class="carbon-saved-label">Total Emitted</p><h3 class="carbon-saved-value" id="carbon-total-emitted">0.00 kg</h3><p class="carbon-saved-sub" id="carbon-emit-trend">All time</p></div>
+                    </div>
+                    <div class="carbon-saved-card carbon-saved-card--saved">
+                        <div class="carbon-saved-icon"><i class="fa-solid fa-leaf"></i></div>
+                        <div><p class="carbon-saved-label">Total Saved</p><h3 class="carbon-saved-value" id="carbon-total-saved">0.00 kg</h3><p class="carbon-saved-sub">Eco choices, solar, recycling</p></div>
+                    </div>
+                    <div class="carbon-saved-card carbon-saved-card--net">
+                        <div class="carbon-saved-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <div><p class="carbon-saved-label">Net Impact</p><h3 class="carbon-saved-value" id="carbon-net-impact">0.00 kg</h3><p class="carbon-saved-sub" id="carbon-net-label">Calculating...</p></div>
+                    </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="carbon-summary-bar">
+                    <div class="carbon-summary-item"><p class="carbon-summary-label">Today</p><h2 class="carbon-summary-value" id="carbon-today-val">0.00 kg</h2></div>
+                    <div class="carbon-summary-item"><p class="carbon-summary-label">This Month</p><h2 class="carbon-summary-value" id="carbon-month-val">0.00 kg</h2></div>
+                    <div class="carbon-summary-item"><p class="carbon-summary-label">This Year</p><h2 class="carbon-summary-value" id="carbon-year-val">0.00 kg</h2></div>
+                    <div class="carbon-summary-item"><p class="carbon-summary-label">Trees Needed</p><h2 class="carbon-summary-value" id="carbon-trees-needed">0</h2></div>
+                </div>
+
+                <!-- Budget -->
+                <div class="card" style="padding:16px 24px;">
+                    <div class="carbon-budget-row"><div><p class="card-label">Daily Budget</p></div><span class="carbon-budget-remaining" id="carbon-budget-remaining">-- kg left</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="carbon-budget-fill" style="width:0%"></div></div>
+                </div>
+
+                <!-- Input + Charts -->
+                <div class="carbon-grid">
+                    <div class="card carbon-input-card">
+                        <h3 class="card-title">Log Emission</h3>
+                        <div class="carbon-cat-tabs">
+                            <button class="carbon-cat-btn active" data-action="switchCarbonCat" data-cat="transport"><i class="fa-solid fa-car"></i> Transport</button>
+                            <button class="carbon-cat-btn" data-action="switchCarbonCat" data-cat="energy"><i class="fa-solid fa-bolt"></i> Energy</button>
+                            <button class="carbon-cat-btn" data-action="switchCarbonCat" data-cat="food"><i class="fa-solid fa-utensils"></i> Food</button>
+                            <button class="carbon-cat-btn" data-action="switchCarbonCat" data-cat="shopping"><i class="fa-solid fa-bag-shopping"></i> Shopping</button>
+                            <button class="carbon-cat-btn" data-action="switchCarbonCat" data-cat="waste"><i class="fa-solid fa-trash"></i> Waste</button>
+                            <button class="carbon-cat-btn" data-action="switchCarbonCat" data-cat="digital"><i class="fa-solid fa-wifi"></i> Digital</button>
+                        </div>
+                        <!-- Transport Form -->
+                        <div class="carbon-cat-form active" id="carbon-form-transport">
+                            <div class="form-group"><label class="form-label">Type</label><select id="transport-type" class="auth-input auth-select"><option value="car-petrol" selected>Car (Petrol)</option><option value="car-diesel">Car (Diesel)</option><option value="car-ev">Car (Electric)</option><option value="car-hybrid">Car (Hybrid)</option><option value="motorcycle">Motorcycle</option><option value="bus">Public Bus</option><option value="train">Train/Metro</option><option value="flight-domestic">Flight (Domestic)</option><option value="flight-international">Flight (International)</option><option value="bicycle">Bicycle</option><option value="walking">Walking</option><option value="rickshaw">Auto Rickshaw</option><option value="taxi">Taxi/Cab</option></select></div>
+                            <div class="form-group"><label class="form-label">Distance (km)</label><input type="number" id="transport-distance" class="auth-input" placeholder="e.g. 15" inputmode="decimal"></div>
+                            <div class="form-group"><label class="form-label">Passengers</label><input type="number" id="transport-passengers" class="auth-input" value="1" min="1" inputmode="numeric"></div>
+                            <div class="carbon-calc-preview" id="transport-calc-preview"><span>Estimated: <strong id="transport-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="transport"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                        <!-- Energy Form -->
+                        <div class="carbon-cat-form" id="carbon-form-energy">
+                            <div class="form-group"><label class="form-label">Type</label><select id="energy-type" class="auth-input auth-select"><option value="electricity" selected>Electricity</option><option value="natural-gas">Natural Gas</option><option value="lpg">LPG/Cooking Gas</option><option value="diesel-generator">Diesel Generator</option><option value="solar">Solar (saves carbon!)</option></select></div>
+                            <div class="form-group"><label class="form-label">Consumption</label><input type="number" id="energy-consumption" class="auth-input" placeholder="kWh / m³ / kg" inputmode="decimal"></div>
+                            <div class="carbon-calc-preview" id="energy-calc-preview"><span>Estimated: <strong id="energy-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="energy"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                        <!-- Food Form -->
+                        <div class="carbon-cat-form" id="carbon-form-food">
+                            <div class="form-group"><label class="form-label">Meal Type</label><select id="food-type" class="auth-input auth-select"><option value="vegan" selected>Vegan</option><option value="vegetarian">Vegetarian</option><option value="poultry">Chicken/Poultry</option><option value="pork">Pork</option><option value="beef">Beef/Red Meat</option><option value="fish">Fish/Seafood</option><option value="dairy">Dairy Heavy</option><option value="processed">Processed Food</option><option value="organic-local">Organic & Local</option></select></div>
+                            <div class="form-group"><label class="form-label">Number of Meals</label><input type="number" id="food-meals" class="auth-input" value="1" min="1" inputmode="numeric"></div>
+                            <div class="carbon-calc-preview" id="food-calc-preview"><span>Estimated: <strong id="food-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="food"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                        <!-- Shopping Form -->
+                        <div class="carbon-cat-form" id="carbon-form-shopping">
+                            <div class="form-group"><label class="form-label">Category</label><select id="shopping-type" class="auth-input auth-select"><option value="clothing" selected>Clothing</option><option value="electronics">Electronics</option><option value="furniture">Furniture</option><option value="books">Books</option><option value="beauty">Beauty</option><option value="sports">Sports</option><option value="other">Other</option></select></div>
+                            <div class="form-group"><label class="form-label">Cost (₹)</label><input type="number" id="shopping-cost" class="auth-input" placeholder="e.g. 2000" inputmode="numeric"></div>
+                            <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="shopping-secondhand"><span class="checkbox-custom"></span>Second-hand (80% less CO₂)</label></div>
+                            <div class="carbon-calc-preview" id="shopping-calc-preview"><span>Estimated: <strong id="shopping-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="shopping"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                        <!-- Waste Form -->
+                        <div class="carbon-cat-form" id="carbon-form-waste">
+                            <div class="form-group"><label class="form-label">Type</label><select id="waste-type" class="auth-input auth-select"><option value="landfill" selected>Landfill</option><option value="recycled">Recycled (saves CO₂!)</option><option value="composted">Composted (saves CO₂!)</option><option value="incinerated">Incinerated</option><option value="e-waste">E-Waste</option></select></div>
+                            <div class="form-group"><label class="form-label">Amount (kg)</label><input type="number" id="waste-amount" class="auth-input" placeholder="e.g. 2" inputmode="decimal"></div>
+                            <div class="carbon-calc-preview" id="waste-calc-preview"><span>Estimated: <strong id="waste-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="waste"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                        <!-- Digital Form -->
+                        <div class="carbon-cat-form" id="carbon-form-digital">
+                            <div class="form-group"><label class="form-label">Activity</label><select id="digital-type" class="auth-input auth-select"><option value="streaming-hd" selected>Video Streaming HD/hr</option><option value="streaming-4k">Video Streaming 4K/hr</option><option value="video-call">Video Call/hr</option><option value="cloud-storage">Cloud Storage/GB/month</option><option value="crypto-transaction">Crypto Transaction</option><option value="email">Emails (per 100)</option><option value="web-browsing">Web Browsing/hr</option><option value="gaming-online">Online Gaming/hr</option><option value="ai-query">AI Query (ChatGPT)</option></select></div>
+                            <div class="form-group"><label class="form-label">Quantity</label><input type="number" id="digital-quantity" class="auth-input" value="1" step="0.1" min="0.1" inputmode="decimal"></div>
+                            <div class="carbon-calc-preview" id="digital-calc-preview"><span>Estimated: <strong id="digital-est">0.00 kg CO₂</strong></span></div>
+                            <button class="btn btn-primary btn-full" data-action="addCarbonEntry" data-cat="digital"><i class="fa-solid fa-plus"></i><span>Add Entry</span></button>
+                        </div>
+                    </div>
+                    <div class="carbon-charts-col">
+                        <div class="card" style="padding:16px 20px;"><div class="time-filter-row"><button class="time-btn active" data-action="setCarbonTime" data-period="day">Today</button><button class="time-btn" data-action="setCarbonTime" data-period="week">Week</button><button class="time-btn" data-action="setCarbonTime" data-period="month">Month</button><button class="time-btn" data-action="setCarbonTime" data-period="year">Year</button></div></div>
+                        <div class="card"><h3 class="card-title">Emission Trend</h3><div class="chart-container"><canvas id="carbon-trend-chart"></canvas></div></div>
+                        <div class="card"><h3 class="card-title">Category Breakdown</h3><div class="chart-container chart-container--sm"><canvas id="carbon-category-chart"></canvas></div></div>
+                        <div class="card card--suggestions"><div class="card-header-row"><h3 class="card-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);margin-right:8px;"></i>Smart Suggestions</h3></div><div class="suggestions-list" id="carbon-suggestions"></div></div>
+                    </div>
+                </div>
+
+                <!-- Entries Table -->
+                <div class="card">
+                    <div class="card-header-row"><h3 class="card-title">Today's Log</h3><button class="btn btn-sm btn-danger" data-action="clearTodayCarbon"><i class="fa-solid fa-trash"></i> Clear</button></div>
+                    <div class="table-responsive"><table class="data-table" id="carbon-entries-table"><thead><tr><th>Category</th><th>Type</th><th>CO₂ (kg)</th><th>Rating</th><th>Time</th><th>Action</th></tr></thead><tbody id="carbon-entries-tbody"></tbody></table></div>
+                    <div id="carbon-entries-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-leaf" style="font-size:40px;opacity:0.2;"></i><p>No entries yet today</p></div>
+                </div>
+            </div>
+
+            <!-- ===== AI CHAT ===== -->
+
+
+
+            <!-- ===== HEALTH TRACKER ===== -->
+            <div id="tab-health" class="tab-section">
+                <div class="stats-grid stats-grid--health">
+                    <div class="stat-card stat-card--steps"><div class="stat-icon"><i class="fa-solid fa-shoe-prints"></i></div><div class="stat-info"><p class="stat-label">Steps</p><h3 class="stat-value" id="health-steps">0</h3><p class="stat-change">Goal: 10,000</p></div></div>
+                    <div class="stat-card stat-card--calories"><div class="stat-icon"><i class="fa-solid fa-fire-flame-curved"></i></div><div class="stat-info"><p class="stat-label">Calories</p><h3 class="stat-value" id="health-calories">0</h3><p class="stat-change">Goal: 2,000</p></div></div>
+                    <div class="stat-card stat-card--sleep"><div class="stat-icon"><i class="fa-solid fa-moon"></i></div><div class="stat-info"><p class="stat-label">Sleep</p><h3 class="stat-value" id="health-sleep">0h</h3><p class="stat-change">Goal: 8h</p></div></div>
+                    <div class="stat-card stat-card--water"><div class="stat-icon"><i class="fa-solid fa-droplet"></i></div><div class="stat-info"><p class="stat-label">Water</p><h3 class="stat-value" id="health-water">0L</h3><p class="stat-change">Goal: 3L</p></div></div>
+                </div>
+                <div class="health-grid">
+                    <div class="card">
+                        <div class="health-sub-tabs">
+                            <button class="health-sub-btn active" data-action="switchHealthTab" data-sub="steps">Steps</button>
+                            <button class="health-sub-btn" data-action="switchHealthTab" data-sub="workout">Workout</button>
+                            <button class="health-sub-btn" data-action="switchHealthTab" data-sub="weight">Weight</button>
+                            <button class="health-sub-btn" data-action="switchHealthTab" data-sub="sleep">Sleep</button>
+                            <button class="health-sub-btn" data-action="switchHealthTab" data-sub="water">Water</button>
+                            <button class="health-sub-btn" data-action="switchHealthTab" data-sub="bmi">BMI</button>
+                        </div>
+                        <div class="health-form active" id="health-form-steps"><div class="form-group"><label class="form-label">Steps</label><input type="number" id="steps-input" class="auth-input" placeholder="8500"></div><div class="form-group"><label class="form-label">Distance (km)</label><input type="number" id="steps-distance" class="auth-input" placeholder="5.5"></div><button class="btn btn-primary btn-full" data-action="logHealth" data-type="steps"><i class="fa-solid fa-plus"></i> Log</button></div>
+                        <div class="health-form" id="health-form-workout"><div class="form-group"><label class="form-label">Type</label><select id="workout-type" class="auth-input auth-select"><option value="running">Running</option><option value="cycling">Cycling</option><option value="swimming">Swimming</option><option value="yoga">Yoga</option><option value="gym-weights">Gym</option><option value="hiit">HIIT</option><option value="walking">Walking</option><option value="sports">Sports</option></select></div><div class="form-group"><label class="form-label">Duration (min)</label><input type="number" id="workout-duration" class="auth-input" placeholder="30"></div><div class="form-group"><label class="form-label">Intensity</label><select id="workout-intensity" class="auth-input auth-select"><option value="low">Low</option><option value="moderate" selected>Moderate</option><option value="high">High</option><option value="extreme">Extreme</option></select></div><div class="form-group"><label class="form-label">Calories (optional)</label><input type="number" id="workout-calories" class="auth-input" placeholder="Auto"></div><button class="btn btn-primary btn-full" data-action="logHealth" data-type="workout"><i class="fa-solid fa-plus"></i> Log</button></div>
+                        <div class="health-form" id="health-form-weight"><div class="form-group"><label class="form-label">Weight (kg)</label><input type="number" id="weight-input" class="auth-input" placeholder="70" step="0.1"></div><div class="form-group"><label class="form-label">Height (cm)</label><input type="number" id="height-input" class="auth-input" placeholder="170"></div><button class="btn btn-primary btn-full" data-action="logHealth" data-type="weight"><i class="fa-solid fa-plus"></i> Log</button></div>
+                        <div class="health-form" id="health-form-sleep"><div class="form-group"><label class="form-label">Hours</label><input type="number" id="sleep-hours" class="auth-input" placeholder="7.5" step="0.5"></div><div class="form-group"><label class="form-label">Quality</label><select id="sleep-quality" class="auth-input auth-select"><option value="poor">Poor</option><option value="fair">Fair</option><option value="good">Good</option><option value="great">Great</option><option value="excellent">Excellent</option></select></div><div class="form-group"><label class="form-label">Bedtime</label><input type="time" id="sleep-bedtime" class="auth-input"></div><div class="form-group"><label class="form-label">Wake</label><input type="time" id="sleep-wake" class="auth-input"></div><button class="btn btn-primary btn-full" data-action="logHealth" data-type="sleep"><i class="fa-solid fa-plus"></i> Log</button></div>
+                        <div class="health-form" id="health-form-water"><div class="water-tracker-visual" id="water-tracker-visual"></div><div class="water-quick-btns"><button class="water-preset" data-action="addWater" data-ml="250">250ml</button><button class="water-preset" data-action="addWater" data-ml="500">500ml</button><button class="water-preset" data-action="addWater" data-ml="750">750ml</button><button class="water-preset" data-action="addWater" data-ml="1000">1L</button></div><div class="form-group"><label class="form-label">Custom (ml)</label><input type="number" id="water-input" class="auth-input" placeholder="ml"></div><button class="btn btn-primary btn-full" data-action="logHealth" data-type="water"><i class="fa-solid fa-droplet"></i> Add</button></div>
+                        <div class="health-form" id="health-form-bmi"><div class="form-group"><label class="form-label">Weight (kg)</label><input type="number" id="bmi-weight" class="auth-input" step="0.1"></div><div class="form-group"><label class="form-label">Height (cm)</label><input type="number" id="bmi-height" class="auth-input"></div><div class="form-group"><label class="form-label">Age</label><input type="number" id="bmi-age" class="auth-input"></div><div class="form-group"><label class="form-label">Gender</label><select id="bmi-gender" class="auth-input auth-select"><option value="male">Male</option><option value="female">Female</option></select></div><button class="btn btn-primary btn-full" data-action="calculateBMI"><i class="fa-solid fa-calculator"></i> Calculate</button><div class="bmi-result" id="bmi-result" style="display:none;"><div class="bmi-value-display" id="bmi-value-display">--</div><div class="bmi-category" id="bmi-category">--</div><div class="bmi-advice" id="bmi-advice">--</div></div></div>
+                    </div>
+                    <div class="health-charts-col">
+                        <div class="card"><h3 class="card-title">Steps</h3><div class="chart-container"><canvas id="health-steps-chart"></canvas></div></div>
+                        <div class="card"><h3 class="card-title">Calories</h3><div class="chart-container chart-container--sm"><canvas id="health-calories-chart"></canvas></div></div>
+                        <div class="card"><h3 class="card-title">Weight</h3><div class="chart-container chart-container--sm"><canvas id="health-weight-chart"></canvas></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== LIVE WEATHER (ENHANCED) ===== -->
+            <div id="tab-weather" class="tab-section">
+                <div class="weather-hero" id="weather-hero">
+                    <div class="weather-hero-main">
+                        <p class="weather-location" id="weather-location"><i class="fa-solid fa-spinner fa-spin"></i> Detecting your location...</p>
+                        <div class="weather-temp-row"><h1 class="weather-temp-big" id="weather-temp-big">--°C</h1><div class="weather-icon-big" id="weather-icon-big"><i class="fa-solid fa-cloud-sun"></i></div></div>
+                        <p class="weather-desc" id="weather-desc">Loading weather data...</p>
+                        <p class="weather-date" id="weather-date">--</p>
+                    </div>
+                </div>
+                <div class="weather-details-grid">
+                    <div class="weather-detail-card"><i class="fa-solid fa-temperature-half"></i><p class="weather-detail-label">Feels Like</p><p class="weather-detail-value" id="weather-feels">--°C</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-droplet"></i><p class="weather-detail-label">Humidity</p><p class="weather-detail-value" id="weather-humidity">--%</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-wind"></i><p class="weather-detail-label">Wind</p><p class="weather-detail-value" id="weather-wind">-- km/h</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-gauge-high"></i><p class="weather-detail-label">Pressure</p><p class="weather-detail-value" id="weather-pressure">-- hPa</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-sun"></i><p class="weather-detail-label">UV Index</p><p class="weather-detail-value" id="weather-uv">--</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-eye"></i><p class="weather-detail-label">Visibility</p><p class="weather-detail-value" id="weather-visibility">-- km</p></div>
+                    <div class="weather-detail-card weather-detail-card--aqi"><i class="fa-solid fa-lungs"></i><p class="weather-detail-label">Air Quality</p><p class="weather-detail-value" id="weather-aqi">--</p><p class="weather-aqi-label" id="weather-aqi-label">--</p></div>
+                    <div class="weather-detail-card"><i class="fa-solid fa-cloud-rain"></i><p class="weather-detail-label">Rain Chance</p><p class="weather-detail-value" id="weather-rain">--%</p></div>
+                </div>
+                <div class="card"><h3 class="card-title">7-Day Forecast</h3><div class="forecast-row" id="forecast-row"></div></div>
+                <div class="card">
+                    <h3 class="card-title">Search City</h3>
+                    <div class="weather-search-row" style="position:relative;">
+                        <div class="input-icon-wrap"><i class="fa-solid fa-magnifying-glass input-icon"></i><input type="text" id="weather-search" class="auth-input" placeholder="Type a city name..." autocomplete="off"></div>
+                        <button class="btn btn-primary" data-action="searchWeather" title="Search"><i class="fa-solid fa-search"></i></button>
+                        <button class="btn btn-outline" data-action="detectLocation" title="Detect my location"><i class="fa-solid fa-location-crosshairs"></i></button>
+                        <div id="weather-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:100;max-height:220px;overflow-y:auto;"></div>
+                    </div>
+                </div>
+                <div id="outdoor-advisory" class="card outdoor-advisory outdoor-advisory--safe" style="margin-top:16px;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        <div id="advisory-level" class="advisory-level advisory-level--safe"><i class="fa-solid fa-shield-halved"></i> SAFE — Safe for Outdoor Activities</div>
+                    </div>
+                    <p id="advisory-message" style="margin:0 0 8px 0;font-size:0.9rem;">Air quality data loading...</p>
+                    <ul id="advisory-precautions" style="margin:0 0 8px 0;padding-left:18px;font-size:0.85rem;"></ul>
+                    <div id="advisory-flags" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+                </div>
+                <div class="card card--insight"><h3 class="card-title"><i class="fa-solid fa-link" style="color:var(--primary);margin-right:8px;"></i>Weather-Carbon Insight</h3><p class="card-desc" id="weather-carbon-insight">Loading...</p></div>
+            </div>
+
+            <!-- ===== NEWS (LIVE RSS) ===== -->
+            <div id="tab-news" class="tab-section">
+                <div class="news-header">
+                    <div class="news-search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="news-search" class="news-search-input" placeholder="Search environment news..." data-action-input="filterNews"></div>
+                    <span id="news-location-badge" class="news-location-badge" style="display:none;"></span>
+                    <select id="news-country-filter" class="auth-input auth-select news-country-select" data-action-change="filterNews"><option value="in" selected>🇮🇳 India</option><option value="us">🇺🇸 United States</option><option value="gb">🇬🇧 United Kingdom</option><option value="au">🇦🇺 Australia</option><option value="ca">🇨🇦 Canada</option><option value="de">🇩🇪 Germany</option><option value="fr">🇫🇷 France</option><option value="jp">🇯🇵 Japan</option><option value="br">🇧🇷 Brazil</option><option value="ng">🇳🇬 Nigeria</option><option value="all">🌍 World</option></select>
+                </div>
+                <div class="news-category-tabs">
+                    <button class="news-cat-btn active" data-cat="all" data-action="setNewsCategory">All</button>
+                    <button class="news-cat-btn" data-cat="environment" data-action="setNewsCategory">🌍 Environment</button>
+                    <button class="news-cat-btn" data-cat="climate" data-action="setNewsCategory">🌡️ Climate</button>
+                    <button class="news-cat-btn" data-cat="pollution" data-action="setNewsCategory">🏭 Pollution</button>
+                    <button class="news-cat-btn" data-cat="wildlife" data-action="setNewsCategory">🐾 Wildlife</button>
+                    <button class="news-cat-btn" data-cat="renewable" data-action="setNewsCategory">⚡ Renewable</button>
+                    <button class="news-cat-btn" data-cat="technology" data-action="setNewsCategory">💡 Green Tech</button>
+                </div>
+                <div id="news-loading" class="news-loading"><div class="skeleton" style="height:300px;margin-bottom:16px;"></div><div class="news-grid"><div class="skeleton" style="height:240px;"></div><div class="skeleton" style="height:240px;"></div><div class="skeleton" style="height:240px;"></div></div></div>
+                <div id="news-featured" class="news-featured" style="display:none;"></div>
+                <div class="news-grid" id="news-grid" style="display:none;"></div>
+                <div id="news-error" class="empty-state" style="display:none;"><i class="fa-solid fa-wifi" style="font-size:40px;opacity:0.2;"></i><p>Unable to load news. Check your internet connection.</p><button class="btn btn-outline btn-sm" data-action="renderNews" style="width:auto;margin-top:12px;"><i class="fa-solid fa-rotate"></i> Retry</button></div>
+                <div class="news-load-more-wrap" id="news-load-more-wrap" style="display:none;"><button class="btn btn-outline" data-action="loadMoreNews"><i class="fa-solid fa-arrow-down"></i><span>Load More</span></button></div>
+            </div>
+
+            <!-- ===== TIPS & NOTES ===== -->
+            <div id="tab-tips" class="tab-section">
+                <div class="tip-featured" id="tip-featured"><div class="tip-featured-icon"><i class="fa-solid fa-seedling"></i></div><div class="tip-featured-content"><p class="tip-featured-date" id="tip-today-date">--</p><h2 class="tip-featured-title" id="tip-today-title">Daily Insight</h2><p class="tip-featured-text" id="tip-today-text">Loading...</p><div class="tip-featured-actions"><button class="btn btn-sm btn-primary" data-action="shareTip"><i class="fa-solid fa-share"></i> Share</button><button class="btn btn-sm btn-ghost" data-action="bookmarkTip"><i class="fa-solid fa-bookmark"></i> Save</button></div></div></div>
+                <div class="card"><div class="card-header-row"><h3 class="card-title">My Eco Journal</h3><button class="btn btn-sm btn-primary" data-action="openNoteEditor"><i class="fa-solid fa-plus"></i> New Note</button></div><div class="note-editor" id="note-editor" style="display:none;"><input type="text" id="note-title" class="auth-input" placeholder="Title"><textarea id="note-body" class="auth-textarea" placeholder="Write your eco thoughts..." rows="4"></textarea><div class="note-editor-actions"><select id="note-tag" class="auth-input auth-select" style="width:auto;"><option value="observation">🔍 Observation</option><option value="idea">💡 Idea</option><option value="action">🎯 Action</option><option value="reflection">🧠 Reflection</option></select><button class="btn btn-sm btn-ghost" data-action="closeNoteEditor">Cancel</button><button class="btn btn-sm btn-primary" data-action="saveNote"><i class="fa-solid fa-save"></i> Save</button></div></div><div class="notes-list" id="notes-list"></div><div id="notes-empty" class="empty-state" style="display:none;"><p>Start your journal!</p></div></div>
+                <div class="card"><h3 class="card-title">Tips History</h3><div class="tips-calendar" id="tips-calendar"></div></div>
+            </div>
+
+            <!-- ===== ECO SHOP ===== -->
+            <div id="tab-shop" class="tab-section">
+                <div class="shop-header">
+                    <div class="shop-search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="shop-search" class="shop-search-input" placeholder="Search 300+ eco products..."></div>
+                    <div class="shop-header-actions">
+                        <select id="shop-sort" class="auth-input auth-select" data-action-change="shopFilter" style="width:auto;padding:10px 14px;">
+                            <option value="relevance">Relevance</option>
+                            <option value="popular">Popular</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="newest">Newest Arrivals</option>
+                            <option value="eco">Eco Rating</option>
+                            <option value="rating">Customer Rating</option>
+                        </select>
+                        <button class="btn btn-primary" data-action="shopOpenSell"><i class="fa-solid fa-store"></i> Sell</button>
+                    </div>
+                </div>
+                <div class="shop-category-tabs">
+                    <button class="shop-cat-btn active" data-cat="all" data-action="shopSetCategory">All</button>
+                    <button class="shop-cat-btn" data-cat="solar" data-action="shopSetCategory">☀️ Solar</button>
+                    <button class="shop-cat-btn" data-cat="water" data-action="shopSetCategory">💧 Water</button>
+                    <button class="shop-cat-btn" data-cat="energy" data-action="shopSetCategory">⚡ Energy</button>
+                    <button class="shop-cat-btn" data-cat="fashion" data-action="shopSetCategory">👕 Fashion</button>
+                    <button class="shop-cat-btn" data-cat="kitchen" data-action="shopSetCategory">🍽️ Kitchen</button>
+                    <button class="shop-cat-btn" data-cat="zerowaste" data-action="shopSetCategory">♻️ Zero Waste</button>
+                    <button class="shop-cat-btn" data-cat="garden" data-action="shopSetCategory">🌱 Garden</button>
+                    <button class="shop-cat-btn" data-cat="cleaning" data-action="shopSetCategory">🧹 Cleaning</button>
+                    <button class="shop-cat-btn" data-cat="transport" data-action="shopSetCategory">🚲 Transport</button>
+                    <button class="shop-cat-btn" data-cat="offset" data-action="shopSetCategory">🌳 Offset</button>
+                    <button class="shop-cat-btn" data-cat="books" data-action="shopSetCategory">📚 Books</button>
+                    <button class="shop-cat-btn" data-cat="tech" data-action="shopSetCategory">💻 Tech</button>
+                    <button class="shop-cat-btn" data-cat="beauty" data-action="shopSetCategory">💄 Beauty</button>
+                    <button class="shop-cat-btn" data-cat="user" data-action="shopSetCategory">👤 User</button>
+                </div>
+                <div class="shop-impact-bar"><div class="shop-impact-item"><i class="fa-solid fa-leaf"></i><span>Total CO₂ Saved: <strong id="shop-total-carbon-saved">--</strong></span></div><div class="shop-impact-item"><i class="fa-solid fa-tree"></i><span>Trees: <strong id="shop-trees-equivalent">--</strong></span></div></div>
+                <div class="shop-products-grid" id="shop-products-grid"></div>
+                <div class="shop-load-more-wrap"><button class="btn btn-outline" data-action="shopLoadMore"><i class="fa-solid fa-arrow-down"></i><span>Load More</span></button></div>
+
+                <!-- Order History Section -->
+                <div class="card" style="margin-top:24px;">
+                    <div class="card-header-row"><h3 class="card-title"><i class="fa-solid fa-box" style="color:var(--primary);margin-right:8px;"></i>My Orders</h3><button class="btn btn-ghost" data-action="shopRenderOrders" style="font-size:12px;"><i class="fa-solid fa-refresh"></i> Refresh</button></div>
+                    <div id="order-history-list"></div>
+                </div>
+            </div>
+
+            <!-- ===== ACHIEVEMENTS ===== -->
+            <div id="tab-achievements" class="tab-section">
+                <div class="streak-hero" id="streak-hero"><div class="streak-fire-ring"><div class="streak-fire-icon"><i class="fa-solid fa-fire"></i></div></div><h2 class="streak-count" id="streak-count">0 Days</h2><p class="streak-label">Current Streak</p><div class="streak-meta"><div class="streak-meta-item"><p class="streak-meta-val" id="streak-best">0</p><p class="streak-meta-label">Best</p></div><div class="streak-meta-item"><p class="streak-meta-val" id="streak-total-days">0</p><p class="streak-meta-label">Total Days</p></div><div class="streak-meta-item"><p class="streak-meta-val" id="streak-next-badge">--</p><p class="streak-meta-label">Next Badge</p></div></div></div>
+                <div class="card"><h3 class="card-title">Milestones</h3><div class="milestone-list" id="milestone-list"></div></div>
+                <div class="card"><div class="card-header-row"><h3 class="card-title">Badges</h3><span class="card-badge" id="badges-count">0/24</span></div><div class="badges-grid" id="badges-grid"></div></div>
+                <div class="card"><h3 class="card-title">Global Leaderboard</h3><div class="leaderboard-table-wrap"><table class="data-table"><thead><tr><th>Rank</th><th>User</th><th>CO₂ Saved</th><th>Streak</th></tr></thead><tbody id="leaderboard-tbody"></tbody></table></div></div>
+            </div>
+
+            <!-- ===== SELLER DASHBOARD ===== -->
+            <div id="tab-seller" class="tab-section">
+                <div class="card">
+                    <div class="card-header-row"><h3 class="card-title"><i class="fa-solid fa-store" style="color:var(--primary);margin-right:8px;"></i>Seller Orders</h3></div>
+                    <div id="seller-orders-list"></div>
+                </div>
+            </div>
+
+            <!-- ===== ADMIN PANEL ===== -->
+            <div id="tab-admin" class="tab-section">
+                <div class="admin-layout">
+                    <!-- Sidebar Navigation -->
+                    <nav class="admin-sidebar">
+                        <div class="admin-sidebar-header">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Admin Center</span>
+                        </div>
+                        <div class="admin-sidebar-nav">
+                            <button class="admin-nav-item active" data-action="adminSwitchTab" data-section="dashboard">
+                                <i class="fa-solid fa-gauge"></i> Dashboard
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="users">
+                                <i class="fa-solid fa-users"></i> Users
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="audit">
+                                <i class="fa-solid fa-scroll"></i> Audit Logs
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="products">
+                                <i class="fa-solid fa-box"></i> Products
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="orders">
+                                <i class="fa-solid fa-shopping-cart"></i> Orders
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="reviews">
+                                <i class="fa-solid fa-star"></i> Reviews
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="ai-usage">
+                                <i class="fa-solid fa-robot"></i> AI Usage
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="health">
+                                <i class="fa-solid fa-heart-pulse"></i> System Health
+                            </button>
+                            <button class="admin-nav-item" data-action="adminSwitchTab" data-section="analytics">
+                                <i class="fa-solid fa-chart-line"></i> Analytics
+                            </button>
+                        </div>
+                    </nav>
+                    <!-- Main Content Area -->
+                    <main class="admin-main">
+                        <div id="admin-content"></div>
+                    </main>
+                </div>
+            </div>
+
+            <!-- ===== FEATURES (All Free) ===== -->
+            <div id="tab-premium" class="tab-section">
+                <div class="premium-hero"><div class="premium-crown"><i class="fa-solid fa-seedling"></i></div><h1 class="premium-hero-title">All Features Free</h1><p class="premium-hero-desc">EcoVerse is 100% free for all users. Every feature unlocked. No hidden charges.</p><div class="premium-free-badge"><i class="fa-solid fa-check-circle"></i> FULL ACCESS</div></div>
+                <div class="pricing-grid">
+                    <div class="pricing-card pricing-card--pro"><div class="pricing-popular-badge">YOUR PLAN</div><p class="pricing-plan-name">Free</p><h2 class="pricing-price">₹0<span>/forever</span></h2><ul class="pricing-features"><li><i class="fa-solid fa-check"></i> Unlimited carbon tracking</li><li><i class="fa-solid fa-check"></i> AI improvement tips</li><li><i class="fa-solid fa-check"></i> Advanced charts & reports</li><li><i class="fa-solid fa-check"></i> All badges</li><li><i class="fa-solid fa-check"></i> Eco challenges</li><li><i class="fa-solid fa-check"></i> Export data</li><li><i class="fa-solid fa-check"></i> Health tracking</li><li><i class="fa-solid fa-check"></i> Weather & AQI</li><li><i class="fa-solid fa-check"></i> Eco Shop</li></ul><button class="btn btn-primary btn-full" disabled><i class="fa-solid fa-check"></i> Active Plan</button></div>
+                    <div class="pricing-card"><p class="pricing-plan-name">Invite Friends</p><h2 class="pricing-price">Free<span></span></h2><ul class="pricing-features"><li><i class="fa-solid fa-check"></i> Share with friends</li><li><i class="fa-solid fa-check"></i> They get all features free</li><li><i class="fa-solid fa-check"></i> Grow the community</li></ul><button class="btn btn-outline btn-full" data-action="showToast" data-message="Share link copied!" data-type="success"><i class="fa-solid fa-share"></i> Invite Friends</button></div>
+                </div>
+                <div class="card"><h3 class="card-title">What's Included</h3><div class="premium-features-grid"><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-robot"></i></div><h4>AI Tips</h4><p>Personalized suggestions</p></div><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-chart-line"></i></div><h4>Advanced Analytics</h4><p>Deep insights & trends</p></div><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-file-pdf"></i></div><h4>PDF Reports</h4><p>Download monthly reports</p></div><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-bolt"></i></div><h4>Challenges</h4><p>Weekly eco challenges</p></div><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-bell"></i></div><h4>Smart Reminders</h4><p>Budget alerts</p></div><div class="premium-feature-item"><div class="premium-feature-icon"><i class="fa-solid fa-palette"></i></div><h4>Themes</h4><p>Custom color schemes</p></div></div></div>
+            </div>
+
+            <!-- ===== PROFILE/SETTINGS — The "Account" UI ===== -->
+            <div id="tab-profile" class="tab-section">
+                <div class="profile-grid">
+                    <div class="card profile-card"><div class="profile-avatar-large" id="profile-avatar-large">U</div><h2 class="profile-name" id="profile-name">User</h2><p class="profile-email" id="profile-email">--</p><p class="profile-joined" id="profile-joined">Joined: --</p><div class="profile-stats-row"><div class="profile-stat"><p class="profile-stat-val" id="profile-total-carbon">0 kg</p><p class="profile-stat-label">Tracked</p></div><div class="profile-stat"><p class="profile-stat-val" id="profile-total-saved">0 kg</p><p class="profile-stat-label">Saved</p></div><div class="profile-stat"><p class="profile-stat-val" id="profile-badges-count">0</p><p class="profile-stat-label">Badges</p></div></div></div>
+                    <div class="card"><h3 class="card-title">Settings</h3>
+                        <div class="settings-section"><h4 class="settings-section-title"><i class="fa-solid fa-user-pen"></i> Profile</h4><div class="form-group"><label class="form-label">Name</label><input type="text" id="settings-name" class="auth-input"></div><button class="btn btn-sm btn-primary" data-action="updateProfile"><i class="fa-solid fa-save"></i> Save</button></div>
+                        <div class="settings-divider"></div>
+                        <div class="settings-section"><h4 class="settings-section-title"><i class="fa-solid fa-bullseye"></i> Carbon Budget</h4><div class="form-group"><label class="form-label">Daily Limit (kg)</label><input type="number" id="settings-carbon-budget" class="auth-input" step="0.1"><p class="form-hint">India avg: 4.2 | Global: 8.5 | US: 16.4</p></div><button class="btn btn-sm btn-primary" data-action="updateCarbonBudget"><i class="fa-solid fa-save"></i> Set</button></div>
+                        <div class="settings-divider"></div>
+                        <div class="settings-section"><h4 class="settings-section-title"><i class="fa-solid fa-heart-pulse"></i> Health Goals</h4><div class="form-row"><div class="form-group"><label class="form-label">Steps</label><input type="number" id="settings-steps-goal" class="auth-input"></div><div class="form-group"><label class="form-label">Sleep (h)</label><input type="number" id="settings-sleep-goal" class="auth-input"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Water (L)</label><input type="number" id="settings-water-goal" class="auth-input"></div><div class="form-group"><label class="form-label">Calories</label><input type="number" id="settings-calorie-goal" class="auth-input"></div></div><button class="btn btn-sm btn-primary" data-action="updateHealthGoals"><i class="fa-solid fa-save"></i> Update</button></div>
+                        <div class="settings-divider"></div>
+                        <div class="settings-section"><h4 class="settings-section-title"><i class="fa-solid fa-palette"></i> Theme</h4><div class="theme-toggle-row"><span>Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="settings-dark-mode" checked data-action-change="toggleTheme"><span class="toggle-slider"></span></label></div></div>
+                        <div class="settings-divider"></div>
+                        <div class="settings-section"><h4 class="settings-section-title"><i class="fa-solid fa-database"></i> Data</h4><div class="settings-actions-row"><button class="btn btn-sm btn-ghost" data-action="exportData"><i class="fa-solid fa-download"></i> Export</button><button class="btn btn-sm btn-ghost" style="color:var(--danger);" data-action="clearAllData"><i class="fa-solid fa-trash"></i> Clear All</button></div></div>
+                        <div class="settings-divider"></div>
+                        <div class="settings-section settings-section--danger"><h4 class="settings-section-title"><i class="fa-solid fa-triangle-exclamation"></i> Danger</h4><button class="btn btn-sm btn-danger" data-action="deleteAccount"><i class="fa-solid fa-user-slash"></i> Delete Account</button></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</section>
+
+<!-- ===== MODALS ===== -->
+<div id="cart-drawer" class="cart-drawer"><div class="cart-drawer-header"><h3><i class="fa-solid fa-cart-shopping"></i> Cart</h3><button data-action="shopCloseCart"><i class="fa-solid fa-xmark"></i></button></div><div class="cart-drawer-items" id="cart-items"></div><div class="cart-drawer-empty" id="cart-empty" style="display:none;"><i class="fa-solid fa-bag-shopping" style="font-size:40px;opacity:0.2;"></i><p>Cart is empty</p></div><div class="cart-drawer-footer" id="cart-footer"><div class="cart-total-row"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div><div class="cart-total-row"><span>CO₂ Saved</span><span id="cart-carbon-save" style="color:var(--success);">0 kg</span></div><div class="cart-total-row cart-total-row--final"><span>Total</span><span id="cart-total">₹0</span></div><button class="btn btn-primary btn-full" data-action="shopOpenCheckout"><i class="fa-solid fa-lock"></i> Checkout</button></div></div>
+<div class="cart-drawer-overlay" data-action="shopCloseCart"></div>
+
+<div id="product-detail-modal" class="modal-overlay"><div class="modal-panel modal-panel--lg"><div class="modal-header"><h3 class="modal-title" id="pd-name">Product</h3><button class="modal-close" data-action="shopCloseDetail"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="product-detail-grid"><div class="product-detail-image" id="pd-image"></div><div class="product-detail-info"><p class="product-detail-category" id="pd-category">Cat</p><h2 class="product-detail-name" id="pd-fullname">Name</h2><div class="product-detail-rating" id="pd-rating"></div><p class="product-detail-price" id="pd-price">₹0</p><p class="product-detail-carbon" id="pd-carbon"></p><p class="product-detail-desc" id="pd-desc"></p><ul class="product-detail-features" id="pd-features"></ul><div class="product-detail-actions"><div class="product-qty-row"><button data-action="shopChangeQty" data-delta="-1"><i class="fa-solid fa-minus"></i></button><span id="pd-qty">1</span><button data-action="shopChangeQty" data-delta="1"><i class="fa-solid fa-plus"></i></button></div><button class="btn btn-primary" data-action="shopAddToCartDetail"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button></div></div></div></div></div></div>
+
+<div id="checkout-modal" class="modal-overlay"><div class="modal-panel modal-panel--md"><div class="modal-header"><h3 class="modal-title"><i class="fa-solid fa-lock" style="color:var(--success);margin-right:8px;"></i>Checkout</h3><button class="modal-close" data-action="shopCloseCheckout"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="checkout-section"><h4 class="checkout-section-title">Order</h4><div id="checkout-items"></div><div class="checkout-totals"><div class="checkout-total-row"><span>Subtotal</span><span id="checkout-subtotal">₹0</span></div><div class="checkout-total-row"><span>GST 18%</span><span id="checkout-tax">₹0</span></div><div class="checkout-total-row checkout-total-row--final"><span>Total</span><span id="checkout-total">₹0</span></div><div class="checkout-carbon-impact" id="checkout-carbon-impact"></div></div></div><div class="checkout-section"><h4 class="checkout-section-title">Address</h4><div class="form-group"><input type="text" id="checkout-name" class="auth-input" placeholder="Full Name"></div><div class="form-group"><input type="text" id="checkout-address" class="auth-input" placeholder="Address"></div><div class="form-row"><div class="form-group"><input type="text" id="checkout-city" class="auth-input" placeholder="City"></div><div class="form-group"><input type="text" id="checkout-pincode" class="auth-input" placeholder="Pincode"></div></div></div><div class="checkout-section"><h4 class="checkout-section-title">Payment</h4><div class="payment-methods"><label class="payment-method-option"><input type="radio" name="payment" value="card" checked><div class="payment-method-card"><i class="fa-solid fa-credit-card"></i><span>Card</span></div></label><label class="payment-method-option"><input type="radio" name="payment" value="upi"><div class="payment-method-card"><i class="fa-solid fa-mobile-screen"></i><span>UPI</span></div></label><label class="payment-method-option"><input type="radio" name="payment" value="cod"><div class="payment-method-card"><i class="fa-solid fa-money-bill-wave"></i><span>COD</span></div></label></div><div class="card-details-form" id="card-details-form"><div class="form-group"><label class="form-label">Card Number</label><input type="text" id="card-number" class="auth-input" placeholder="1234 5678 9012 3456" maxlength="19"></div><div class="form-row"><div class="form-group"><label class="form-label">Expiry</label><input type="text" id="card-expiry" class="auth-input" placeholder="MM/YY" maxlength="5"></div><div class="form-group"><label class="form-label">CVV</label><input type="password" id="card-cvv" class="auth-input" placeholder="•••" maxlength="4"></div></div></div><div class="upi-details-form" id="upi-details-form" style="display:none;"><div class="form-group"><label class="form-label">UPI ID</label><input type="text" id="upi-id" class="auth-input" placeholder="you@upi"></div></div></div></div><div class="modal-footer"><button class="btn btn-ghost" data-action="shopCloseCheckout">Cancel</button><button class="btn btn-primary" data-action="shopPlaceOrder"><i class="fa-solid fa-check"></i> Pay <span id="checkout-final-total">₹0</span></button></div></div></div>
+
+<div id="sell-product-modal" class="modal-overlay"><div class="modal-panel modal-panel--md"><div class="modal-header"><h3 class="modal-title"><i class="fa-solid fa-store" style="color:var(--primary);margin-right:8px;"></i>Sell Product</h3><button class="modal-close" data-action="shopCloseSell"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="form-group"><label class="form-label">Name</label><input type="text" id="sell-name" class="auth-input" placeholder="Bamboo Toothbrush"></div><div class="form-group"><label class="form-label">Category</label><select id="sell-category" class="auth-input auth-select"><option value="zerowaste">Zero Waste</option><option value="fashion">Fashion</option><option value="kitchen">Kitchen</option><option value="garden">Garden</option><option value="beauty">Beauty</option><option value="other">Other</option></select></div><div class="form-group"><label class="form-label">Description</label><textarea id="sell-desc" class="auth-textarea" placeholder="Describe..." rows="3"></textarea></div><div class="form-row"><div class="form-group"><label class="form-label">Price (₹)</label><input type="number" id="sell-price" class="auth-input" placeholder="499"></div><div class="form-group"><label class="form-label">Stock</label><input type="number" id="sell-stock" class="auth-input" placeholder="50"></div></div><div class="form-group"><label class="form-label">CO₂ Saved per unit (kg)</label><input type="number" id="sell-carbon" class="auth-input" placeholder="2.5" step="0.1"></div><div class="form-group"><label class="form-label">Image URL</label><input type="url" id="sell-image" class="auth-input" placeholder="https://..."></div><div class="form-group"><label class="form-label">Features (one per line)</label><textarea id="sell-features" class="auth-textarea" placeholder="Biodegradable&#10;Lasts 3 months" rows="2"></textarea></div></div><div class="modal-footer"><button class="btn btn-ghost" data-action="shopCloseSell">Cancel</button><button class="btn btn-primary" data-action="shopSubmitProduct"><i class="fa-solid fa-rocket"></i> List</button></div></div></div>
+
+<div id="badge-unlock-modal" class="modal-overlay"><div class="modal-panel modal-panel--sm modal-panel--badge"><div class="badge-unlock-content"><div class="badge-unlock-icon" id="badge-unlock-icon"><i class="fa-solid fa-trophy"></i></div><h2 class="badge-unlock-title">Badge Unlocked!</h2><h3 class="badge-unlock-name" id="badge-unlock-name">Name</h3><p class="badge-unlock-desc" id="badge-unlock-desc">Desc</p><button class="btn btn-primary btn-full" data-action="closeBadgeModal">Awesome!</button></div></div></div>
+
+<div id="order-success-modal" class="modal-overlay"><div class="modal-panel modal-panel--sm"><div class="order-success-content"><div class="order-success-icon"><i class="fa-solid fa-circle-check"></i></div><h2 class="order-success-title">Order Placed!</h2><p class="order-success-id" id="order-success-id">#ECO-000000</p><p class="order-success-desc">Thank you for choosing sustainable products.</p><div class="order-success-impact" id="order-success-impact"></div><button class="btn btn-primary btn-full" data-action="shopCloseOrderSuccess">Continue</button></div></div></div>
+
+<div id="mobile-sidebar-overlay" class="mobile-sidebar-overlay" data-action="toggleMobileSidebar"></div>
+
+<!-- Chart.js — served locally for strict CSP compliance (no jsDelivr external dependency) -->
+<script src="js/chart.umd.min.js"></script>
+<!-- EcoVerse Modular JS — loaded in dependency order -->
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/carbon.js"></script>
+<script src="js/health.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/news.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/seller.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/app.js"></script>
+<!-- Event delegation system — loaded LAST, replaces ALL inline onclick/onchange/oninput handlers -->
+<script src="js/events.js"></script>
+
+<!-- ===== AI CHAT FLOATING POPUP ===== -->
+<button class="ai-fab" id="ai-fab" data-action="aiToggle" title="AI Chat">
+    <i class="fa-solid fa-robot"></i>
+</button>
+
+<div class="ai-popup" id="ai-popup">
+    <div class="ai-popup-header">
+        <div class="ai-popup-title"><i class="fa-solid fa-robot"></i> EcoVerse AI</div>
+        <div class="ai-popup-header-actions">
+            <button class="ai-clear-btn" data-action="aiClearChat" title="Clear chat"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="ai-close-btn" data-action="aiToggle" title="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+    <div class="ai-popup-body" id="ai-chat-messages">
+        <div class="ai-welcome">
+            <div class="ai-welcome-avatar"><i class="fa-solid fa-robot"></i></div>
+            <h3>Hello! I'm EcoVerse AI 👋</h3>
+            <p>Your personal sustainability assistant. Ask me anything about reducing carbon footprint, health tips, eco-friendly choices, or environmental advice.</p>
+        </div>
+        <div class="ai-quick-actions" id="ai-quick-actions">
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="How can I reduce my carbon footprint today?"><i class="fa-solid fa-leaf"></i> Reduce carbon</button>
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="Give me personalized health advice based on my data"><i class="fa-solid fa-heart-pulse"></i> Health advice</button>
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="What eco-friendly choices can I make for my home?"><i class="fa-solid fa-house"></i> Eco home</button>
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="Suggest a fun eco challenge I can do today"><i class="fa-solid fa-lightbulb"></i> Eco challenge</button>
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="What are some sustainable food choices?"><i class="fa-solid fa-utensils"></i> Green eating</button>
+            <button class="ai-quick-chip" data-action="aiQuickAction" data-prompt="How can I save energy and water at home?"><i class="fa-solid fa-bolt"></i> Save energy</button>
+        </div>
+    </div>
+    <div class="ai-popup-footer">
+        <input type="text" id="ai-chat-input" placeholder="Ask me anything about sustainability..." autocomplete="off">
+        <button id="ai-send-btn" data-action="aiSend" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</div>
+
+</body>
+</html>
