@@ -8,7 +8,7 @@
 echo "=== EcoVerse Render Startup ==="
 
 # If DATABASE_URL is in Render's format (postgresql://user:pass@host:port/db),
-# convert it to JDBC format and extract username/password
+# parse it properly and construct a valid JDBC URL
 if [ -n "$DATABASE_URL" ]; then
     # Check if it's already in JDBC format
     case "$DATABASE_URL" in
@@ -18,18 +18,38 @@ if [ -n "$DATABASE_URL" ]; then
             ;;
         postgresql://*)
             echo "Converting Render DATABASE_URL to JDBC format..."
-            # Extract user and password from postgresql://user:pass@host:port/db
+
+            # Parse: postgresql://user:password@host:port/database
+            # Extract user
             DB_USER=$(echo "$DATABASE_URL" | sed -E 's|postgresql://([^:]+):([^@]+)@.*|\1|')
+            # Extract password
             DB_PASS=$(echo "$DATABASE_URL" | sed -E 's|postgresql://([^:]+):([^@]+)@.*|\2|')
-            # Build JDBC URL from the postgresql:// URL
-            JDBC_URL=$(echo "$DATABASE_URL" | sed -E 's|^postgresql://|jdbc:postgresql://|')
+            # Extract host:port/database (everything after the @)
+            HOST_PART=$(echo "$DATABASE_URL" | sed -E 's|postgresql://[^@]+@(.*)|\1|')
+            # Extract host (before the colon for port, or before the slash for db)
+            DB_HOST=$(echo "$HOST_PART" | sed -E 's|([^:]+).*|\1|')
+            # Extract port (if present)
+            DB_PORT=$(echo "$HOST_PART" | sed -n -E 's|[^:]+:([0-9]+).*|\1|p')
+            # Extract database name (after the last /)
+            DB_NAME=$(echo "$HOST_PART" | sed -E 's|.*/([^?]+).*|\1|')
+
+            # Default port if not present
+            if [ -z "$DB_PORT" ]; then
+                DB_PORT="5432"
+            fi
+
+            # Build proper JDBC URL: jdbc:postgresql://host:port/dbname
+            JDBC_URL="jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
             export SPRING_DATASOURCE_URL="$JDBC_URL"
             export DB_USERNAME="$DB_USER"
             export DB_PASSWORD="$DB_PASS"
 
-            echo "DB user: $DB_USER"
-            echo "JDBC URL set (host hidden for security)"
+            echo "DB host: ${DB_HOST}"
+            echo "DB port: ${DB_PORT}"
+            echo "DB name: ${DB_NAME}"
+            echo "DB user: ${DB_USER}"
+            echo "JDBC URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
             ;;
         *)
             echo "WARNING: DATABASE_URL format not recognized: ${DATABASE_URL%:*}//..."
