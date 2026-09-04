@@ -49,9 +49,9 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
 
-      # --- CORS: allow the Render URL + localhost for dev ---
+      # --- CORS: Render URL + localhost for dev ---
       - key: CORS_ORIGINS
-        value: "*"
+        value: https://ecoverse-backend.onrender.com,http://localhost:8081,http://localhost:3000
 
       # --- Cookie settings for HTTPS ---
       - key: COOKIE_SECURE
