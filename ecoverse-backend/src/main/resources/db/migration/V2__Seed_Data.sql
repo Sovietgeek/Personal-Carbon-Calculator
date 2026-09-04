@@ -78,14 +78,6 @@ ON CONFLICT (category, type) DO NOTHING;
 -- Reset the ID sequence after manual inserts
 SELECT setval('emission_factors_id_seq', (SELECT MAX(id) FROM emission_factors));
 
--- Seed a demo seller user (id=1) so product seeds satisfy fk_products_seller_id (V8).
--- Password hash = BCrypt of 'DemoSeller@123' — placeholder account for seed products only.
-INSERT INTO users (id, name, email, password, country, is_premium, joined_date, created_at, updated_at)
-VALUES (1, 'EcoVerse Demo Seller', 'seller@ecoverse.app',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'India', FALSE, NOW(), NOW(), NOW())
-ON CONFLICT (id) DO NOTHING;
-SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
-
 -- Sample Eco Products
 INSERT INTO products (id, seller_id, name, description, category, price, image_url, eco_rating, is_secondhand, is_available, created_at, updated_at) VALUES
 (1, 1, 'Bamboo Toothbrush Set', '100% biodegradable bamboo toothbrush set of 4. Zero plastic packaging.', 'beauty', 299.0, NULL, 5, FALSE, TRUE, NOW(), NOW()),

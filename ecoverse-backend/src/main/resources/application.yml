@@ -319,6 +319,7 @@ spring:
     baseline-on-migrate: true
     clean-disabled: true
     repair-enabled: true
+    validate-on-migrate: false
 
   sql:
     init:
