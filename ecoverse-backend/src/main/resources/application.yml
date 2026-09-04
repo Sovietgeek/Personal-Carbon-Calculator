@@ -1,9 +1,9 @@
 server:
   port: 8081
   error:
-    include-message: never
-    include-stacktrace: never
-    include-binding-errors: never
+    include-message: always
+    include-stacktrace: on_param
+    include-binding-errors: always
   tomcat:
     max-http-form-post-size: 100KB
     max-swallow-size: 1MB
