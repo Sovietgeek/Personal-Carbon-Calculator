@@ -1,0 +1,111 @@
+# ================================================================
+# EcoVerse — Docker Compose (Local Development / Production-like)
+# Run: docker-compose up -d
+#
+# IMPORTANT: Never commit real secrets to this file.
+# All secrets come from the .env file (which is .gitignored).
+# Copy .env.example to .env and fill in real values.
+# ================================================================
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: ecoverse-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ecoverse}
+      POSTGRES_USER: ${POSTGRES_USER:-ecoverse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ecoverse} -d ${POSTGRES_DB:-ecoverse}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - ecoverse-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Local SMTP capture (dev/staging email verification)
+  # Web UI: http://localhost:8025  |  SMTP: localhost:1025
+  # Prevents "email verification required" lockout when no real SMTP is configured.
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: ecoverse-mailhog
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
+    restart: unless-stopped
+    networks:
+      - ecoverse-network
+
+  # Backend API (also serves frontend static files)
+  backend:
+    build:
+      context: ./ecoverse-backend
+      dockerfile: Dockerfile
+    container_name: ecoverse-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - SERVER_FORWARD_HEADERS_STRATEGY=FRAMEWORK
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-ecoverse}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-ecoverse}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      - DATABASE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-ecoverse}
+      - DB_USERNAME=${POSTGRES_USER:-ecoverse}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set in .env}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:5500,http://localhost:8081}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-dummy-id}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-dummy-secret}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-}
+      - RAZORPAY_WEBHOOK_SECRET=${RAZORPAY_WEBHOOK_SECRET:-}
+      - RAZORPAY_MODE=${RAZORPAY_MODE:-test}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - MAIL_HOST=${MAIL_HOST:-mailhog}
+      - MAIL_PORT=${MAIL_PORT:-1025}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_FROM=${MAIL_FROM:-noreply@ecoverse.app}
+      - MAIL_SMTP_AUTH=${MAIL_SMTP_AUTH:-false}
+      - MAIL_SMTP_STARTTLS=${MAIL_SMTP_STARTTLS:-false}
+      - APP_URL=${APP_URL:-http://localhost:8081}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-}
+    ports:
+      - "${BACKEND_PORT:-8081}:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8081/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - ecoverse-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  postgres_data:
+
+networks:
+  ecoverse-network:
+    driver: bridge

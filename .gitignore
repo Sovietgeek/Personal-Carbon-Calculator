@@ -1,0 +1,43 @@
+# ================================================================
+# EcoVerse — Git Ignore
+# ================================================================
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+*.war
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+nul
+
+# --- Environment (contains secrets!) ---
+.env
+.env.local
+.env.production
+
+# --- Database ---
+data/
+*.mv.db
+*.trace.db
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Docker ---
+# Don't ignore docker-compose.yml, but ignore docker override files
+docker-compose.override.yml
+
+# --- Uploads ---
+uploads/

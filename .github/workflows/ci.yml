@@ -1,0 +1,56 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'ecoverse-backend/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'ecoverse-backend/**'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ecoverse-backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('ecoverse-backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run all tests (including Testcontainers)
+        run: ./mvnw clean test -DexcludedGroups=
+        env:
+          JWT_SECRET: ci-test-secret-key-that-is-at-least-64-bytes-long-for-hs512-algorithm-XXXXXX
+
+      - name: Build application JAR
+        if: success()
+        run: ./mvnw clean package -DskipTests
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ecoverse-backend/target/surefire-reports/
+          retention-days: 7
