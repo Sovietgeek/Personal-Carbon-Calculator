@@ -66,7 +66,7 @@ services:
         fromService:
           name: ecoverse-backend
           type: web
-          property: hostUrl
+          property: host
 
       # --- Email (disabled by default — set SMTP vars in Render dashboard if needed) ---
       - key: MAIL_SMTP_AUTH
