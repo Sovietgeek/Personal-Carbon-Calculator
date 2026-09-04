@@ -36,11 +36,49 @@ data/
 logs/
 
 # --- Docker ---
-# Don't ignore docker-compose.yml, but ignore docker override files
 docker-compose.override.yml
 
 # --- Uploads ---
 uploads/
-.env
+
+# --- Temp / Debug files ---
 token.txt
 vtoken.txt
+cookies*.txt
+auth-*.txt
+auth-*.json
+ec_cookies*.txt
+login*.json
+news_*.json
+test_*.json
+mail.json
+
+# --- ZCode plans (internal) ---
+.zcode/
+
+# --- Temp registration files ---
+.tmp_reg/
+
+# --- Build/phase reports (internal docs) ---
+*_REPORT.md
+PHASE*.md
+STAGING_*.md
+CSP_*.md
+RAZORPAY_TEST*.md
+REGISTRATION_400*.md
+BACKUP_RESTORE.md
+DEPLOY.md
+
+# --- Standalone SQL files (only Flyway migrations are needed) ---
+/*.sql
+
+# --- Staging files ---
+docker-compose.staging.yml
+.env.staging.example
+.github/workflows/staging.yml
+
+# --- Debug/verify scripts ---
+scripts/verify-*.sh
+scripts/backup-restore-test.sh
+scripts/append-h2-products.js
+scripts/update-h2-images.js
