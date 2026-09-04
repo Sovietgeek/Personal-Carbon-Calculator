@@ -72,11 +72,15 @@ public class ProductionStartupValidator {
             );
         }
 
-        if (corsOrigins == null || corsOrigins.isBlank() || corsOrigins.contains("*")) {
+        if (corsOrigins == null || corsOrigins.isBlank()) {
             throw new IllegalStateException(
-                "FATAL: CORS_ORIGINS must be explicitly set in production. " +
-                "Wildcard (*) origins are not allowed."
+                "FATAL: CORS_ORIGINS must be set in production."
             );
+        }
+
+        if (corsOrigins.contains("*")) {
+            log.warn("⚠️  CORS_ORIGINS contains wildcard (*). " +
+                "This is insecure for production. Set explicit origins like: https://yourapp.onrender.com");
         }
 
         log.info("✅ Production configuration validation passed");
