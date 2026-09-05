@@ -111,18 +111,13 @@ public class GlobalExceptionHandler {
     }
 
     // ======================================================================
-    // 500 — Catch All (temporarily showing error for debugging)
-    // TODO: Revert to generic message after debugging
+    // 500 — Catch All (NEVER expose internal details in production)
     // ======================================================================
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
         logger.error("Unhandled exception: ", ex);
 
-        // TEMPORARILY show actual error for deployment debugging
-        String detail = ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName();
-        String cause = ex.getCause() != null && ex.getCause().getMessage() != null
-                ? " | Cause: " + ex.getCause().getMessage() : "";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("Server error: " + detail + cause));
+                .body(ApiResponse.error("Something went wrong. Please try again later."));
     }
 }
