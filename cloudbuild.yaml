@@ -1,0 +1,64 @@
+# ================================================================
+# EcoVerse — Google Cloud Build Configuration
+# Deploy: gcloud builds submit --config cloudbuild.yaml
+#
+# Free Tier (Always Free):
+#   - Cloud Run: 2M requests/month, 360K vCPU-seconds, 180K CPU-seconds
+#   - Cloud SQL: f1-micro instance (free tier eligible)
+#   - Artifact Registry: 0.5 GB storage
+# ================================================================
+
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/ecoverse/backend:${SHORT_SHA}'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/ecoverse/backend:latest'
+      - '-f'
+      - 'ecoverse-backend/Dockerfile'
+      - 'ecoverse-backend'
+
+  # Step 2: Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/ecoverse/backend'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ecoverse-backend'
+      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/ecoverse/backend:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=1'
+      - '--set-env-vars=SPRING_PROFILES_ACTIVE=prod'
+      - '--set-env-vars=SERVER_PORT=8080'
+      - '--set-env-vars=SERVER_FORWARD_HEADERS_STRATEGY=FRAMEWORK'
+      - '--set-env-vars=CORS_ORIGINS=*'
+      - '--set-env-vars=COOKIE_SECURE=true'
+      - '--set-secrets=DATABASE_URL=ecoverse-db-url:latest'
+      - '--set-secrets=DB_USERNAME=ecoverse-db-user:latest'
+      - '--set-secrets=DB_PASSWORD=ecoverse-db-pass:latest'
+      - '--set-secrets=JWT_SECRET=ecoverse-jwt-secret:latest'
+      - '--set-secrets=GEMINI_API_KEY=ecoverse-gemini-key:latest'
+      - '--set-secrets=ADMIN_EMAIL=ecoverse-admin-email:latest'
+      - '--set-secrets=ADMIN_PASSWORD=ecoverse-admin-password:latest'
+
+substitutions:
+  _REGION: asia-south1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
