@@ -279,6 +279,14 @@ public class AiService {
     }
 
     private AiResponse getFallbackResponse(AiRequest request) {
+        if (!isConfigured()) {
+            return AiResponse.builder()
+                    .message("AI chat is not configured yet. The GEMINI_API_KEY needs to be set in the server environment. Contact the admin to enable this feature.")
+                    .type("chat")
+                    .source("fallback")
+                    .quickActions(List.of("View dashboard", "Get eco tip", "Contact admin"))
+                    .build();
+        }
         return AiResponse.builder()
                 .message("AI assistant is temporarily unavailable. The AI service provider may be experiencing issues. Please try again in a moment.")
                 .type("chat")

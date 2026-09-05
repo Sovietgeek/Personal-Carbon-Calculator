@@ -60,6 +60,9 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
+    @Value("${app.url:}")
+    private String appUrl;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -156,7 +159,24 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        List<String> origins = new java.util.ArrayList<>(Arrays.asList(allowedOrigins.split(",")));
+
+        // Auto-add the app's own URL (set by Render as APP_URL from service host)
+        // This ensures CORS works even if CORS_ORIGINS env var has a stale/wrong URL
+        if (appUrl != null && !appUrl.isBlank()) {
+            String normalizedUrl = appUrl.trim();
+            // Render APP_URL may not include scheme — add https:// if missing
+            if (!normalizedUrl.startsWith("http")) {
+                normalizedUrl = "https://" + normalizedUrl;
+            }
+            if (!origins.contains(normalizedUrl)) {
+                origins.add(normalizedUrl);
+            }
+        }
+
+        // Remove any blank entries from misconfigured env vars
+        origins.removeIf(String::isBlank);
+
         configuration.setAllowedOrigins(origins);
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

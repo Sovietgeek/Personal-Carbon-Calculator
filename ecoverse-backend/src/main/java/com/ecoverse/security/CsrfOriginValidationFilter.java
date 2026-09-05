@@ -52,6 +52,9 @@ public class CsrfOriginValidationFilter extends OncePerRequestFilter {
     @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5500,http://127.0.0.1:5500,http://localhost:8081,http://127.0.0.1:8081}")
     private String allowedOrigins;
 
+    @Value("${app.url:}")
+    private String appUrl;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -94,6 +97,8 @@ public class CsrfOriginValidationFilter extends OncePerRequestFilter {
 
     /**
      * Check if the given origin is in the allowed origins list.
+     * Also checks the app's own URL (APP_URL) so CORS works without
+     * manually updating CORS_ORIGINS in the hosting dashboard.
      */
     private boolean isAllowedOrigin(String origin) {
         if (origin == null || origin.isBlank()) return false;
@@ -104,6 +109,18 @@ public class CsrfOriginValidationFilter extends OncePerRequestFilter {
                 return true;
             }
         }
+
+        // Check against APP_URL (auto-set by Render from service host)
+        if (appUrl != null && !appUrl.isBlank()) {
+            String normalizedUrl = appUrl.trim();
+            if (!normalizedUrl.startsWith("http")) {
+                normalizedUrl = "https://" + normalizedUrl;
+            }
+            if (origin.trim().equalsIgnoreCase(normalizedUrl)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

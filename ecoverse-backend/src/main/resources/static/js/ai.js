@@ -224,21 +224,21 @@ const AI = (() => {
                     source: result.data.source || 'openai'
                 });
             } else {
-                chatHistory.push({
-                    role: 'bot',
-                    content: 'AI assistant is temporarily unavailable. Please try again later.',
-                    source: 'system'
-                });
-            }
-        } catch (e) {
-            const isRateLimit = e?.message === 'Rate limited';
-            chatHistory.push({
-                role: 'bot',
-                content: isRateLimit
-                    ? 'Too many requests. Please wait a moment before asking another question.'
-                    : 'AI assistant is temporarily unavailable. Please try again later.',
-                source: 'system'
-            });
+	                chatHistory.push({
+	                    role: 'bot',
+	                    content: result?.data?.message || 'AI assistant is not configured yet. Please contact the admin.',
+	                    source: result?.data?.source || 'system'
+	                });
+	            }
+	        } catch (e) {
+	            const isRateLimit = e?.message === 'Rate limited';
+	            chatHistory.push({
+	                role: 'bot',
+	                content: isRateLimit
+	                    ? 'Too many requests. Please wait a moment before asking another question.'
+	                    : (e?.message || 'AI assistant is temporarily unavailable. Please try again later.'),
+	                source: 'system'
+	            });
         }
     }
 
