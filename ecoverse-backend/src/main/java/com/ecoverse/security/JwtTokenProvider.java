@@ -48,8 +48,8 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Generate short-lived access token (JWT) with explicit HS512 algorithm,
-     * issuer, and audience claims for stronger validation.
+     * Generate short-lived access token (JWT) with HS256 algorithm,
+     * issuer, and audience claims.
      */
     public String generateAccessToken(Long userId, String email) {
         java.util.Date now = new java.util.Date();
@@ -63,7 +63,7 @@ public class JwtTokenProvider {
                 .audience().add(AUDIENCE).and()
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(getSigningKey(), io.jsonwebtoken.SignatureAlgorithm.HS512)
+                .signWith(getSigningKey(), io.jsonwebtoken.SignatureAlgorithm.HS256)
                 .compact();
     }
 
