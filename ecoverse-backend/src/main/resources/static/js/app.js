@@ -69,6 +69,43 @@ document.addEventListener('DOMContentLoaded', () => {
     Theme.init();
 });
 
+// ============================================================
+// COLD START LOADING OVERLAY — shown when server is waking up
+// ============================================================
+
+function showColdStartOverlay() {
+    let overlay = document.getElementById('cold-start-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'cold-start-overlay';
+        overlay.style.cssText = `
+            position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+            background:rgba(6,78,59,0.92);backdrop-filter:blur(8px);flex-direction:column;gap:16px;
+        `;
+        overlay.innerHTML = `
+            <div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.2);border-top-color:#10b981;
+                border-radius:50%;animation:ecoSpin 1s linear infinite;"></div>
+            <p style="color:#d1fae5;font-family:Inter,sans-serif;font-size:16px;text-align:center;max-width:280px;">
+                Waking up the server…<br>
+                <span style="font-size:13px;color:#6ee7b7;">This may take up to 60 seconds on first visit.</span>
+            </p>
+        `;
+        // Add spin animation if not already present
+        if (!document.getElementById('cold-start-style')) {
+            const style = document.createElement('style');
+            style.id = 'cold-start-style';
+            style.textContent = '@keyframes ecoSpin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(style);
+        }
+        document.body.appendChild(overlay);
+    }
+}
+
+function hideColdStartOverlay() {
+    const overlay = document.getElementById('cold-start-overlay');
+    if (overlay) overlay.remove();
+}
+
 async function initApp() {
     AppState.user = EcoUtils.lsGet('eco_user', null);
 
@@ -103,15 +140,28 @@ async function initApp() {
     if (AppState.user) {
         // User has a stored session — try to restore access token via httpOnly cookie
         if (!EcoAPI.isLoggedIn()) {
-            const refreshed = await EcoAPI.silentRefresh();
-            if (refreshed) {
-                enterApp();
-            } else {
-                // Refresh token expired or invalid — clear stale user data, show login
+            showColdStartOverlay();
+            try {
+                const refreshed = await EcoAPI.silentRefresh();
+                hideColdStartOverlay();
+                if (refreshed) {
+                    enterApp();
+                } else {
+                    // Refresh token expired or invalid — clear stale user data, show login
+                    AppState.user = null;
+                    EcoUtils.lsRemove('eco_user');
+                    document.getElementById('auth-screen').style.display = 'flex';
+                    document.getElementById('app-screen').style.display = 'none';
+                    return;
+                }
+            } catch (err) {
+                hideColdStartOverlay();
+                // Cold start timeout or network error — show login with helpful message
                 AppState.user = null;
                 EcoUtils.lsRemove('eco_user');
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
+                showToast('Server is waking up. Please try logging in again in 30 seconds.', 'warning');
                 return;
             }
         } else {
@@ -398,40 +448,61 @@ document.addEventListener('input', e => {
     }
 });
 
-async function login() {
-    const email = document.getElementById('login-email')?.value?.trim();
-    const password = document.getElementById('login-password')?.value;
+	async function login() {
+	    const email = document.getElementById('login-email')?.value?.trim();
+	    const password = document.getElementById('login-password')?.value;
 
-    if (!email || !password) return showToast('Fill all fields', 'error');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast('Please enter a valid email address', 'error');
+	    if (!email || !password) return showToast('Fill all fields', 'error');
+	    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast('Please enter a valid email address', 'error');
 
-    try {
-        const result = await EcoAPI.login(email, password);
-        if (result && result.success && result.data) {
-            AppState.user = result.data.user || result.data;
-            AppState.user.joined = AppState.user.joinedDate || AppState.user.joined || new Date().toISOString();
-            AppState.user.carbonBudget = AppState.user.carbonBudget || 4.2;
-            // All core features are free — isPremium is not used for gating
-            AppState.user.goals = AppState.user.goals || { steps: 10000, sleep: 8, water: 3, calories: 2000 };
-            EcoUtils.lsSet('eco_user', AppState.user);
-            enterApp();
-            showToast('Welcome back!', 'success');
-            return;
-        }
-        if (result && result.message) {
-            showToast(result.message, 'error');
-            return;
-        }
-    } catch (err) {
-        // API unavailable
-        if (err?.message && err.message !== 'Rate limited') {
-            showToast(err.message, 'error');
-            return;
-        }
-    }
+	    // Show loading overlay for cold-start scenarios (free hosting wakes up on first request)
+	    const loginBtn = document.querySelector('[data-action="login"]');
+	    const origBtnHTML = loginBtn?.innerHTML;
+	    if (loginBtn) {
+	        loginBtn.disabled = true;
+	        loginBtn.innerHTML = '<span>Signing in…</span><i class="fa-solid fa-spinner fa-spin"></i>';
+	    }
+	    showColdStartOverlay();
 
-    showToast('Login failed. Please check your credentials and try again.', 'error');
-}
+	    try {
+	        const result = await EcoAPI.login(email, password);
+	        hideColdStartOverlay();
+	        if (result && result.success && result.data) {
+	            AppState.user = result.data.user || result.data;
+	            AppState.user.joined = AppState.user.joinedDate || AppState.user.joined || new Date().toISOString();
+	            AppState.user.carbonBudget = AppState.user.carbonBudget || 4.2;
+	            // All core features are free — isPremium is not used for gating
+	            AppState.user.goals = AppState.user.goals || { steps: 10000, sleep: 8, water: 3, calories: 2000 };
+	            EcoUtils.lsSet('eco_user', AppState.user);
+	            enterApp();
+	            showToast('Welcome back!', 'success');
+	            return;
+	        }
+	        if (result && result.message) {
+	            showToast(result.message, 'error');
+	            return;
+	        }
+	    } catch (err) {
+	        hideColdStartOverlay();
+	        // API unavailable — could be cold start or network error
+	        if (err?.message && err.message !== 'Rate limited') {
+	            if (err.message.includes('timed out') || err.message.includes('waking up')) {
+	                showToast('Server is waking up. Please wait 30 seconds and try again.', 'warning');
+	            } else {
+	                showToast(err.message, 'error');
+	            }
+	            return;
+	        }
+	    } finally {
+	        hideColdStartOverlay();
+	        if (loginBtn) {
+	            loginBtn.disabled = false;
+	            loginBtn.innerHTML = origBtnHTML || '<span>Sign In</span><i class="fa-solid fa-arrow-right"></i>';
+	        }
+	    }
+
+	    showToast('Login failed. Please check your credentials and try again.', 'error');
+	}
 
 async function forgotPassword() {
     const emailInput = document.getElementById('login-email');

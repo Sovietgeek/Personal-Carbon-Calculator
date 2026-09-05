@@ -85,6 +85,29 @@ function sanitizeObject(obj) {
 // CORE API REQUEST FUNCTION
 // ============================================================
 
+	// ============================================================
+	// REQUEST TIMEOUT — AbortController with configurable timeout
+	// ============================================================
+	const API_TIMEOUT_MS = 60000; // 60s — generous for cold starts on free hosting
+	const COLD_START_TIMEOUT_MS = 120000; // 2min — for first request waking a sleeping server
+
+	async function fetchWithTimeout(url, config, timeoutMs = API_TIMEOUT_MS) {
+	    const controller = new AbortController();
+	    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+	    config.signal = controller.signal;
+	    try {
+	        const response = await fetch(url, config);
+	        clearTimeout(timeoutId);
+	        return response;
+	    } catch (error) {
+	        clearTimeout(timeoutId);
+	        if (error.name === 'AbortError') {
+	            throw new Error('Request timed out. The server may be waking up — please try again.');
+	        }
+	        throw error;
+	    }
+	}
+
 	async function apiRequest(method, endpoint, body = null, options = {}) {
 	    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
 
@@ -106,64 +129,70 @@ function sanitizeObject(obj) {
 	        }
 	    }
 
+	    // Use longer timeout for auth endpoints (cold start wakes the server)
+	    const isAuthEndpoint = endpoint.startsWith('/api/auth/');
+	    const timeout = isAuthEndpoint ? COLD_START_TIMEOUT_MS : API_TIMEOUT_MS;
+
 	    const config = {
 	        method,
 	        headers,
 	        credentials: 'include', // Send httpOnly cookies (refresh token)
 	    };
 
-    if (body && method !== 'GET') {
-        // JSON.stringify handles transport escaping. HTML encoding belongs at
-        // the output boundary, never in credentials or API values.
-        config.body = JSON.stringify(body);
-    }
+	    if (body && method !== 'GET') {
+	        // JSON.stringify handles transport escaping. HTML encoding belongs at
+	        // the output boundary, never in credentials or API values.
+	        config.body = JSON.stringify(body);
+	    }
 
-    try {
-        const response = await fetch(url, config);
+	    try {
+	        const response = await fetchWithTimeout(url, config, timeout);
 
-        // Only protected API calls should attempt cookie-based token refresh.
-        // A 401 from login or another public auth endpoint is a real auth
-        // failure, not an expired session.
-        if (response.status === 401 && shouldRefreshOnUnauthorized(endpoint)) {
-            const refreshed = await tryRefreshToken();
-            if (refreshed) {
-                // Retry with new token
-                headers['Authorization'] = `Bearer ${getToken()}`;
-                config.headers = headers;
-                const retryResponse = await fetch(url, config);
-                return handleResponse(retryResponse);
-            } else {
-                // Refresh failed — logout
-                clearTokens();
-                if (typeof onAuthExpired === 'function') {
-                    onAuthExpired();
-                } else {
-                    window.location.href = '/';
-                }
-                throw new Error('Session expired. Please login again.');
-            }
-        }
+	        // Only protected API calls should attempt cookie-based token refresh.
+	        // A 401 from login or another public auth endpoint is a real auth
+	        // failure, not an expired session.
+	        if (response.status === 401 && shouldRefreshOnUnauthorized(endpoint)) {
+	            const refreshed = await tryRefreshToken();
+	            if (refreshed) {
+	                // Retry with new token
+	                headers['Authorization'] = `Bearer ${getToken()}`;
+	                config.headers = headers;
+	                const retryResponse = await fetchWithTimeout(url, config, timeout);
+	                return handleResponse(retryResponse);
+	            } else {
+	                // Refresh failed — logout
+	                clearTokens();
+	                if (typeof onAuthExpired === 'function') {
+	                    onAuthExpired();
+	                } else {
+	                    window.location.href = '/';
+	                }
+	                throw new Error('Session expired. Please login again.');
+	            }
+	        }
 
-        // Handle 429 — Rate limited
-        if (response.status === 429) {
-            const retryAfter = response.headers.get('X-RateLimit-Retry-After');
-            const msg = retryAfter
-                ? `Too many requests. Try again in ${Math.ceil(retryAfter / 1000)}s.`
-                : 'Too many requests. Please wait a moment.';
-            showToast(msg, 'warning');
-            throw new Error('Rate limited');
-        }
+	        // Handle 429 — Rate limited
+	        if (response.status === 429) {
+	            const retryAfter = response.headers.get('X-RateLimit-Retry-After');
+	            const msg = retryAfter
+	                ? `Too many requests. Try again in ${Math.ceil(retryAfter / 1000)}s.`
+	                : 'Too many requests. Please wait a moment.';
+	            showToast(msg, 'warning');
+	            throw new Error('Rate limited');
+	        }
 
-        return handleResponse(response);
+	        return handleResponse(response);
 
-    } catch (error) {
-        // Network error
-        if (error.name === 'TypeError' && error.message.includes('fetch')) {
-            showToast('Network error. Check your internet connection.', 'error');
-        }
-        throw error;
-    }
-}
+	    } catch (error) {
+	        // Network error or timeout — show helpful message for cold starts
+	        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+	            showToast('Network error. The server may be waking up — please wait and try again.', 'warning');
+	        } else if (error.message && error.message.includes('timed out')) {
+	            showToast('Server is waking up. Please wait 30 seconds and try again.', 'warning');
+	        }
+	        throw error;
+	    }
+	}
 
 function shouldRefreshOnUnauthorized(endpoint) {
     return !endpoint.startsWith('/api/auth/login') &&

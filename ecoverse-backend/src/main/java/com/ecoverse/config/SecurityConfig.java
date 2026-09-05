@@ -133,9 +133,11 @@ public class SecurityConfig {
                     response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(self)");
                     // X-Permitted-Cross-Domain-Policies: none
                     response.setHeader("X-Permitted-Cross-Domain-Policies", "none");
-                    // Cross-Origin headers for additional protection
-                    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-                    response.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+                    // Cross-Origin headers — "cross-origin" allows mobile browsers,
+                    // WebViews, and proxy-based browsers (Opera Mini, UC Browser) to
+                    // load resources without being blocked by CORP checks.
+                    response.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+                    response.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
                     // Strict-Transport-Security: only for HTTPS requests (1 year, include subdomains)
                     if (request.isSecure()) {
                         response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");

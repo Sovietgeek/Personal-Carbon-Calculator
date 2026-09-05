@@ -51,7 +51,7 @@ services:
 
       # --- CORS: Render URL + localhost for dev ---
       - key: CORS_ORIGINS
-        value: https://ecoverse-backend.onrender.com,http://localhost:8081,http://localhost:3000
+        value: https://ecoverse-backend-2mec.onrender.com,http://localhost:8081,http://localhost:3000
 
       # --- Cookie settings for HTTPS ---
       - key: COOKIE_SECURE
