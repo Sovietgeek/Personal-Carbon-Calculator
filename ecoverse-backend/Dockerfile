@@ -26,23 +26,28 @@ RUN addgroup -S ecoverse && adduser -S ecoverse -G ecoverse
 # Copy the built JAR from stage 1
 COPY --from=build /app/target/*.jar app.jar
 
-# Copy Render startup script and make it executable (must be before USER switch)
+# Copy startup scripts and make them executable (must be before USER switch)
 COPY render-start.sh /app/render-start.sh
-RUN chmod +x /app/render-start.sh
+COPY koyeb-start.sh /app/koyeb-start.sh
+RUN chmod +x /app/render-start.sh /app/koyeb-start.sh
 
 # Switch to non-root user after file setup
 USER ecoverse
 
-# Configurable defaults (overridden by docker-compose / Render env vars)
-ENV SPRING_PROFILES_ACTIVE=dev
+# JVM memory tuning for 256MB RAM environments (Koyeb nano)
+# Max heap 180MB leaves room for metaspace, threads, and OS overhead
+ENV JAVA_OPTS="-Xmx180m -Xms128m -XX:+UseSerialGC -XX:MaxMetaspaceSize=64m"
+
+# Configurable defaults (overridden by hosting platform env vars)
+ENV SPRING_PROFILES_ACTIVE=prod
 ENV SERVER_FORWARD_HEADERS_STRATEGY=FRAMEWORK
 
 # Expose port
 EXPOSE 8081
 
 # Health check — uses Actuator health endpoint
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
   CMD wget -q --spider http://localhost:8081/actuator/health || exit 1
 
-# Run via startup script (handles DATABASE_URL conversion for Render)
+# Default: Render startup script. Override with koyeb-start.sh on Koyeb.
 ENTRYPOINT ["/app/render-start.sh"]

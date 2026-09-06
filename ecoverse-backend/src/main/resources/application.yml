@@ -300,11 +300,13 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      maximum-pool-size: 25
-      minimum-idle: 10
-      connection-timeout: 20000
+      # Supabase pooled endpoint (port 6543) limits connections.
+      # Keep pool small to avoid exhausting the shared pooler.
+      maximum-pool-size: ${HIKARI_MAX_POOL:10}
+      minimum-idle: 2
+      connection-timeout: 30000
       idle-timeout: 300000
-      max-lifetime: 1200000
+      max-lifetime: 600000
 
   jpa:
     hibernate:

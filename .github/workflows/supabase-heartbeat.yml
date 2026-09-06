@@ -1,0 +1,39 @@
+# ================================================================
+# Supabase Database Heartbeat
+# Prevents Supabase free tier from pausing the database after 7 days
+# of inactivity by running a lightweight query every 2 days.
+# ================================================================
+
+name: Supabase Heartbeat
+
+on:
+  schedule:
+    # Run every 2 days at 6:00 AM UTC (11:30 AM IST)
+    - cron: '0 6 */2 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Supabase Database
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "SUPABASE_DATABASE_URL secret is not set."
+            echo "Add it in GitHub repo Settings > Secrets > Actions"
+            exit 1
+          fi
+
+          echo "Running heartbeat query..."
+          RESULT=$(psql "$DATABASE_URL" -c "SELECT 1 AS heartbeat;" -t -A 2>&1)
+
+          if [ "$RESULT" = "1" ]; then
+            echo "Heartbeat successful - database is active."
+          else
+            echo "Heartbeat failed: $RESULT"
+            exit 1
+          fi
