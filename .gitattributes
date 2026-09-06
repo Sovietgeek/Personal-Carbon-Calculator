@@ -1,0 +1,2 @@
+# Force LF for shell scripts — CRLF breaks them inside Docker (Alpine Linux)
+*.sh text eol=lf
